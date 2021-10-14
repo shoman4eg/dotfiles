@@ -1,0 +1,41 @@
+configuration {
+	font: "Inter 11";
+	show-icons: true;
+	icon-theme: "Papirus";
+	disable-history: false;
+	fullscreen: false;
+	hide-scrollbar: true;
+	dynamic: true;
+	yoffset: -100;
+	kb-accept-entry: "!Super-Tab,Return";
+  	kb-row-down: "Super-Tab,Down";
+	kb-row-up: "Super-Shift-Tab,Up";
+  	kb-cancel: "Escape";
+	window-thumbnail: true;
+}
+
+@import "nord.rasi"
+
+inputbar {
+	enabled: false;
+}
+
+listview {
+	cycle: true;
+	columns:                        1;
+	// lines:							5;
+	dynamic:                        true;
+    layout:                         vertical;
+}
+
+window {
+    // transparency:                   "real";
+	width:							20%;
+}
+
+element-icon {
+    text-color:       				inherit;
+    // horizontal-align:               0.5;
+    // vertical-align:                 0.5;
+    // size:                           40px;
+}
