@@ -51,14 +51,6 @@ DISABLE_AUTO_TITLE="true"
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
@@ -81,14 +73,6 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-
-setopt CORRECT
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_SPACE
-setopt HIST_FIND_NO_DUPS
-setopt HIST_BEEP
-setopt HIST_IGNORE_ALL_DUPS
-unsetopt HIST_IGNORE_DUPS
 
 echo -e -n "\x1b[\x34 q"
 
@@ -118,7 +102,6 @@ export TERM=tmux-256color
 export TERMINAL=alacritty
 export GOPATH=$HOME/.go
 
-export BAT_THEME='OneHalfDark'
 export PAGER='most'
 typeset -A hash
 source "${XDG_CONFIG_HOME}/zshconfig/history.zsh"
