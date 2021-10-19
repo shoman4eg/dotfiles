@@ -19,6 +19,7 @@ eye and functional.
 | Window Manager     | [bspwm](https://github.com/baskerville/bspwm)                  |
 | Bar                | [polybar](https://github.com/jaagr/polybar)                    |
 | Program Launcher   | [rofi](https://github.com/DaveDavenport/rofi)                  |
+| Dotfiles manager   | [yadm](https://yadm.io)                  |
 | Web Browser        | [Firefox](https://www.mozilla.org/en-US/firefox/new/)          |
 | Code Editor        | [Nvim](https://neovim.io/)                                     |
 | Terminal font      | [FiraCode Nerd Font](https://www.nerdfonts.com/font-downloads) |
