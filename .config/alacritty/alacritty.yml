@@ -6,7 +6,8 @@
 env:
   TERM: tmux-256color
 imports:
-  - nord.yaml
+  - ~/.config/alacritty/tokyo-night.yaml
+  - ~/.config/alacritty/nord.yaml
 #env:
   # TERM variable
   #
@@ -175,32 +176,115 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
-# Colors (Tomorrow Night Bright)
-colors:
-  primary:
-    background: '0x2E3440'
-    foreground: '0xD8DEE9'
-  cursor:
-    text: '0x2E3440'
-    cursor: '0xD8DEE9'
-  normal:
-    black: '0x3B4252'
-    red: '0xBF616A'
-    green: '0xA3BE8C'
-    yellow: '0xEBCB8B'
-    blue: '0x81A1C1'
-    magenta: '0xB48EAD'
-    cyan: '0x88C0D0'
-    white: '0xE5E9F0'
-  bright:
-    black: '0x4C566A'
-    red: '0xBF616A'
-    green: '0xA3BE8C'
-    yellow: '0xEBCB8B'
-    blue: '0x81A1C1'
-    magenta: '0xB48EAD'
-    cyan: '0x8FBCBB'
-    white: '0xECEFF4'
+
+schemes:
+  tokyo-night: &tokyo-night
+    # Default colors
+    primary:
+      background: '0x1a1b26'
+      foreground: '0xa9b1d6'
+
+    # Normal colors
+    normal:
+      black:   '0x32344a'
+      red:     '0xf7768e'
+      green:   '0x9ece6a'
+      yellow:  '0xe0af68'
+      blue:    '0x7aa2f7'
+      magenta: '0xad8ee6'
+      cyan:    '0x449dab'
+      white:   '0x787c99'
+
+    # Bright colors
+    bright:
+      black:   '0x444b6a'
+      red:     '0xff7a93'
+      green:   '0xb9f27c'
+      yellow:  '0xff9e64'
+      blue:    '0x7da6ff'
+      magenta: '0xbb9af7'
+      cyan:    '0x0db9d7'
+      white:   '0xacb0d0'
+
+  tokyo-night-storm: &tokyo-night-storm
+    # Default colors
+    primary:
+      background: '0x24283b'
+      foreground: '0xa9b1d6'
+
+    # Normal colors
+    normal:
+      black:   '0x32344a'
+      red:     '0xf7768e'
+      green:   '0x9ece6a'
+      yellow:  '0xe0af68'
+      blue:    '0x7aa2f7'
+      magenta: '0xad8ee6'
+      cyan:    '0x449dab'
+      white:   '0x9699a8'
+
+    # Bright colors
+    bright:
+      black:   '0x444b6a'
+      red:     '0xff7a93'
+      green:   '0xb9f27c'
+      yellow:  '0xff9e64'
+      blue:    '0x7da6ff'
+      magenta: '0xbb9af7'
+      cyan:    '0x0db9d7'
+      white:   '0xacb0d0'
+
+  nord: &nord
+    primary:
+      background: '0x2E3440'
+      foreground: '0xD8DEE9'
+      dim_foreground: '#a5abb6'
+    cursor:
+      text: '0x2E3440'
+      cursor: '0xD8DEE9'
+    vi_mode_cursor:
+      text: '0x2E3440'
+      cursor: '#D8DEE9'
+    selection:
+      text: CellForeground
+      background: '0x4C566A'
+    search:
+      matches:
+        foreground: CellBackground
+        background: '0x88C0D0'
+      bar:
+        background: '0x434C5E'
+        foreground: '0xD8DEE9'
+    normal:
+      black: '0x3B4252'
+      red: '0xBF616A'
+      green: '0xA3BE8C'
+      yellow: '0xEBCB8B'
+      blue: '0x81A1C1'
+      magenta: '0xB48EAD'
+      cyan: '0x88C0D0'
+      white: '0xE5E9F0'
+    bright:
+      black: '0x4C566A'
+      red: '0xBF616A'
+      green: '0xA3BE8C'
+      yellow: '0xEBCB8B'
+      blue: '0x81A1C1'
+      magenta: '0xB48EAD'
+      cyan: '0x8FBCBB'
+      white: '0xECEFF4'
+    dim:
+      black: '0x373E4D'
+      red: '0x94545D'
+      green: '0x809575'
+      yellow: '0xB29E75'
+      blue: '0x68809A'
+      magenta: '0x8C738C'
+      cyan: '0x6D96A5'
+      white: '0xAEB3BB'
+
+# Colors
+colors: *tokyo-night-storm
 
 # Visual Bell
 #
@@ -227,12 +311,6 @@ bell:
   animation: EaseOutExpo
   duration: 0
   color: '0xffffff'
-
-# Background opacity
-#
-# Window opacity as a floating point number from `0.0` to `1.0`.
-# The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 1.0
 
 # Mouse bindings
 #

@@ -1,13 +1,10 @@
-#!/bin/sh
-# Colors
-# source <(grep = colors.ini | sed 's/ *= */=/g' | sec 's/-/_/g')
-# SETTINGS {{{ ---
+#!/bin/bash
 
-active_text_color="#a5abb6"
+active_text_color="#d8dee9"
 active_bg="#3b4252"
-active_underline=
+active_underline="#81a1c1"
 
-inactive_text_color="#81a1c1"
+inactive_text_color="#a5abb6"
 inactive_bg=
 inactive_underline=
 
@@ -15,101 +12,8 @@ hidden_text_color="#4c566a"
 hidden_bg=
 hidden_underline=
 
-separator="  "
-show="window_class" # options: window_title, window_class, window_classname
-forbidden_classes="Polybar Conky Gmrun"
-empty_desktop_message=""
-
-char_limit=15
-max_windows=15
-char_case="upper" # normal, upper, lower
-add_spaces="true"
-resize_increment=16
-wm_border_width=1 # setting this might be required for accurate resize position
-
-# --- }}}
-
-
-main() {
-	# If no argument passed...
-	if [ -z "$2" ]; then
-		# ...print new window list every time
-		# the active window changes or
-		# a window is opened or closed
-		xprop -root -spy _NET_CLIENT_LIST _NET_ACTIVE_WINDOW |
-			while IFS= read -r _; do
-				generate_window_list
-			done
-
-	# If arguments are passed, run requested on-click function
-	else
-		"$@"
-	fi
-}
-
-# ON-CLICK FUNCTIONS {{{ ---
-
-# dirty hack, but without retiling there remains an empty spot
-retile_after_hide() {
-    #    wmctrl -ir "$1" -b toggle,fullscreen
-    #    wmctrl -ir "$1" -b toggle,fullscreen
-       bspc node -t fullscreen && bspc node -t tiled
-
-}
-
-raise_or_minimize() {
-       if [ "$(get_active_wid)" = "$1" ]; then
-               wmctrl -ir "$1" -b toggle,hidden
-       else
-              wmctrl -ia "$1"
-              wmctrl -ir "$1" -b remove,hidden; wmctrl -ia "$1"
-              # wmctrl -ia "$1"
-       fi
-       retile_after_hide "$1"
-}
-
-close() {
-	wmctrl -ic "$1"
-}
-
-slop_resize() {
-	wmctrl -ia "$1"
-	wmctrl -ir "$1" -e "$(slop -f 0,%x,%y,%w,%h)"
-}
-
-increment_size() {
-	while IFS="[ .]" read -r wid ws wx wy ww wh _; do
-		test "$wid" != "$1" && continue
-		x=$(( wx - wm_border_width * 2 - resize_increment / 2 ))
-		y=$(( wy - wm_border_width * 2 - resize_increment / 2 ))
-		w=$(( ww + resize_increment ))
-		h=$(( wh + resize_increment ))
-	done <<-EOF
-	$(wmctrl -lG)
-	EOF
-
-	wmctrl -ir "$1" -e "0,$x,$y,$w,$h"
-}
-
-decrement_size() {
-	while IFS="[ .]" read -r wid ws wx wy ww wh _; do
-		test "$wid" != "$1" && continue
-		x=$(( wx - wm_border_width * 2 + resize_increment / 2 ))
-		y=$(( wy - wm_border_width * 2 + resize_increment / 2 ))
-		w=$(( ww - resize_increment ))
-		h=$(( wh - resize_increment ))
-	done <<-EOF
-	$(wmctrl -lG)
-	EOF
-
-	wmctrl -ir "$1" -e "0,$x,$y,$w,$h"
-}
-
-# --- }}}
-
-
-
-# WINDOW LIST SETUP {{{ ---
+char_limit=10
+class_char_limit=8
 
 active_left="%{F$active_text_color}"
 active_right="%{F-}"
@@ -117,21 +21,14 @@ inactive_left="%{F$inactive_text_color}"
 inactive_right="%{F-}"
 hidden_left="%{F$hidden_text_color}"
 hidden_right="%{F-}"
+separator="  "
 separator="%{F$inactive_text_color}$separator%{F-}"
 
-if [ -n "$active_underline" ]; then
-	active_left="${active_left}%{+u}%{u$active_underline}"
-	active_right="%{-u}${active_right}"
-fi
+char_case="upper" # normal, upper, lower
 
 if [ -n "$active_bg" ]; then
 	active_left="${active_left}%{B$active_bg}"
 	active_right="%{B-}${active_right}"
-fi
-
-if [ -n "$inactive_underline" ]; then
-	inactive_left="${inactive_left}%{+u}%{u$inactive_underline}"
-	inactive_right="%{-u}${inactive_right}"
 fi
 
 if [ -n "$inactive_bg" ]; then
@@ -139,21 +36,24 @@ if [ -n "$inactive_bg" ]; then
 	inactive_right="%{B-}${inactive_right}"
 fi
 
-get_active_wid() {
-	active_wid=$(xprop -root _NET_ACTIVE_WINDOW)
-	active_wid="${active_wid#*\# }"
-	active_wid="${active_wid%,*}" # Necessary for XFCE
-	while [ ${#active_wid} -lt 10 ]; do
-		active_wid="0x0${active_wid#*x}"
-	done
-	echo "$active_wid"
+format_underline() {
+	echo -n "%{u#0a6cf5}%{+u}$(shorten "$1")%{-u}   "
 }
 
-get_active_workspace() {
-	wmctrl -d |
-		while IFS="[ .]" read -r number active_status _; do
-			test "$active_status" = "*" && echo "$number" && break
-		done
+wm_class() {
+	echo $(xprop WM_CLASS -id $1 | awk '{print $4}' | sed -e 's/^"//' -e 's/"$//')
+}
+wm_title() {
+	echo $(xtitle $1)
+}
+
+# Truncate displayed name to user-selected limit
+truncate() {
+	if [ "${#1}" -gt "$2" ]; then
+		echo "$1" | cut -c1-$($2-1)
+	else
+		echo "$1"
+	fi
 }
 
 is_hidden_wid() {
@@ -165,39 +65,43 @@ is_hidden_wid() {
 	fi
 }
 
-generate_window_list() {
-	active_workspace=$(get_active_workspace)
-	active_wid=$(get_active_wid)
+raise_or_minimize() {
+	if [ "$(get_active_wid)" = "$1" ]; then
+		wmctrl -ir "$1" -b toggle,hidden
+	else
+		wmctrl -ia "$1"
+		wmctrl -ir "$1" -b remove,hidden; wmctrl -ia "$1"
+		# wmctrl -ia "$1"
+	fi
+	retile_after_hide "$1"
+}
+
+close() {
+	wmctrl -ic "$1"
+}
+
+add_action() {
+	w_name=""
 	window_count=0
-	on_click="$0"
+	windows=$(xtitle $(bspc query -N -n .window --desktop $MONITOR:focused))
+	id_windows=$(bspc query -N -n .window --desktop $MONITOR:focused)
+	focused=$(xtitle $(bspc query -N -n))
+	id_focused=$(bspc query -N -n)
+	win_id=$(wmctrl -lx | awk '{$2=$3=$4=" ";print}')
+	while IFS="[ .\.]" read -r w; do
+		w_name=$(wm_title $w)
 
-	# Format each window name one by one
-	# Space and . are both used as IFS,
-	# because classname and class are separated by '.'
-	while IFS="[ .\.]" read -r wid ws cname cls host title; do
-		# Don't show the window if on another workspace (-1 = sticky)
-		if [ "$ws" != "$active_workspace" ] && [ "$ws" != "-1" ]; then
-			continue
+		if [ "${#w_name}" -gt "$char_limit" ]; then
+			w_name="$(echo "$w_name" | cut -c1-$((char_limit-1)))…"
 		fi
 
-		# Don't show the window if its class is forbidden
-		case "$forbidden_classes" in
-			*$cls*) continue ;;
-		esac
+		w_class=$(wm_class $w)
 
-		# If max number of windows reached, just increment
-		# the windows counter
-		if [ "$window_count" -ge "$max_windows" ]; then
-			window_count=$(( window_count + 1 ))
-			continue
+		if [ "${#w_class}" -gt "$class_char_limit" ]; then
+			w_class="$(echo "$w_class" | cut -c1-$((class_char_limit-1)))"
 		fi
 
-		# Show the user-selected window property
-		case "$show" in
-			"window_class") w_name="$cls" ;;
-			"window_classname") w_name="$cname" ;;
-			"window_title") w_name="$title" ;;
-		esac
+		w_name=" $w_name - $w_class "
 
 		# Use user-selected character case
 		case "$char_case" in
@@ -209,20 +113,9 @@ generate_window_list() {
 				) ;;
 		esac
 
-		# Truncate displayed name to user-selected limit
-		if [ "${#w_name}" -gt "$char_limit" ]; then
-			w_name="$(echo "$w_name" | cut -c1-$((char_limit-1)))…"
-		fi
-
-		# Apply add-spaces setting
-		if [ "$add_spaces" = "true" ]; then
-			w_name=" $w_name "
-		fi
-
-		# Add left and right formatting to displayed name
-		if [ "$wid" = "$active_wid" ]; then
+		if [ "$w" = "$id_focused" ]; then
 			w_name="${active_left}${w_name}${active_right}"
-		elif ( is_hidden_wid "$wid"); then
+		elif ( is_hidden_wid "$w"); then
 			w_name="${hidden_left}${w_name}${hidden_right}"
 		else
 			w_name="${inactive_left}${w_name}${inactive_right}"
@@ -233,36 +126,21 @@ generate_window_list() {
 			printf "%s" "$separator"
 		fi
 
-		# Add on-click action Polybar formatting
-		printf "%s" "%{A1:$on_click raise_or_minimize $wid:}"
-		printf "%s" "%{A2:$on_click close $wid:}"
-		printf "%s" "%{A3:$on_click slop_resize $wid:}"
-		printf "%s" "%{A4:$on_click increment_size $wid:}"
-		printf "%s" "%{A5:$on_click decrement_size $wid:}"
+		printf "%s" "%{A1:$on_click bspc node -f $w:}"
+		printf "%s" "%{A2:$on_click close $w:}"
 		# Print the final window name
 		printf "%s" "$w_name"
-		printf "%s" "%{A}%{A}%{A}%{A}%{A}"
+		printf "%s" "%{A}%{A}"
 
 		window_count=$(( window_count + 1 ))
 	done <<-EOF
-	$(wmctrl -lx)
+		$id_windows
 	EOF
 
-	# After printing all the windows,
-	# print number of hidden windows
-	if [ "$window_count" -gt "$max_windows" ]; then
-		printf "%s" "+$(( window_count - max_windows ))"
-	fi
-
-	# Print empty desktop message if no windows are open
 	if [ "$window_count" = 0 ]; then
-		printf "%s" "$empty_desktop_message"
+		printf "%s" " "
 	fi
-
-	# Print newline
 	echo ""
 }
 
-# --- }}}
-
-main "$@"
+xtitle -s | while read; do add_action; done

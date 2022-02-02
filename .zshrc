@@ -102,6 +102,8 @@ export TERM=tmux-256color
 export TERMINAL=alacritty
 export GOPATH=$HOME/.go
 
+unalias duf
+
 export PAGER='most'
 typeset -A hash
 source "${XDG_CONFIG_HOME}/zshconfig/history.zsh"
@@ -132,3 +134,8 @@ fi
 unset dump_file
 
 source /home/askew/.config/broot/launcher/bash/br
+
+# BEGIN SNIPPET: Platform.sh CLI configuration
+HOME=${HOME:-'/home/askew'}
+export PATH="$HOME/"'.platformsh/bin':"$PATH"
+if [ -f "$HOME/"'.platformsh/shell-config.rc' ]; then . "$HOME/"'.platformsh/shell-config.rc'; fi # END SNIPPET

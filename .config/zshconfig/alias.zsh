@@ -16,7 +16,7 @@ alias grep='grep --color=tty -d skip'
 alias htopm='htop -s PERCENT_MEM'
 alias htopc='htop -s PERCENT_CPU'
 alias yaourt='yay'
-
+alias cloc='tokei'
 
 alias zshconfig="${EDITOR} ~/.zshrc"
 

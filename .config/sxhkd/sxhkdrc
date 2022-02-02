@@ -19,6 +19,7 @@ super + d
 super + r
 	rofi -show run
 
+# Screenshot
 alt + shift + 2
 	flameshot gui
 
@@ -41,20 +42,14 @@ super + e
 super + l
 	betterlockscreen -l dim --display 1
 
-############
-# brightness
-############
-
+# Brightness
 XF86MonBrightnessUp
 	xbacklight -inc 10
 
 XF86MonBrightnessDown
 	xbacklight -dec 10
 
-########
-# volume
-########
-
+# Volume
 XF86AudioRaiseVolume
 	~/.local/bin/volumecontrol -n up 5
 XF86AudioLowerVolume
@@ -64,9 +59,9 @@ XF86AudioMute
 XF86AudioMicMute
 	~/.local/bin/togglemic
 
-###############
+#
 # bspwm hotkeys
-###############
+#
 
 # restart bspwm
 super + alt + shift + q
@@ -130,8 +125,8 @@ super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
 # focus the last node/desktop
-super + grave
-	bspc node -f last
+# super + grave
+# 	bspc node -f last
 
 # AltTab
 alt + {_,shift + }Tab
@@ -148,10 +143,10 @@ alt + {_,shift + }Tab
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} 'focused:^{1-9,10}'
 
-
+# move to another monitor
 super + o
 	bspc node --to-monitor last --follow
-	# $monitor=` bspc query --monitors --monitor any.\!focused`; \
+
 #
 # preselect
 #

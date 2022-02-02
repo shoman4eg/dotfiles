@@ -4,7 +4,6 @@ configuration {
 	show-icons: true;
 	terminal: "alacritty";
 	auto-select: false;
-	theme: "nord";
 	display-run: " ";
 	display-drun: "";
 	display-window: "  ";
@@ -13,5 +12,5 @@ configuration {
 	modi: "window,run,drun";
 	show-icons: true;
 }
-
+@theme "nord"
 @import "nord"
