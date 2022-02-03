@@ -1,0 +1,148 @@
+;;;; Created & Designed by: https://github.com/rxyhn ;;;;
+
+;;  Profile vars
+(defvar IMAGE "images/profile.png")
+(defvar NAME "@askew")
+
+;;  System vars
+(defpoll current-brightness :interval "2s" "xbacklight -get")
+(defpoll current-volume :interval "2s" "pactl get-sink-volume @DEFAULT_SINK@ | awk '{gsub(\"%,?\", \"\"); print $5; exit}'")
+
+;;  Time vars
+(defpoll hour :interval "1s" `date +%H`)
+(defpoll minute :interval "1s" `date +%M`)
+(defpoll date :interval "1s" `date "+%A, %d %B"`)
+(defpoll calendar_day :interval "10h" `date +%d`)
+(defpoll calendar_month :interval "10h" "($(date +%m)-1)")
+(defpoll calendar_year :interval "10h" `date +%Y`)
+
+;;  ********************************************************************************
+
+;;  profile
+(defwidget user []
+	(box :class "genwin" :orientation "v" :spacing 20 :space-evenly "false" :vexpand "false" :hexpand "false"
+		(box :class "face" :halign "center" :style "background-image: url('${IMAGE});")
+		(label :class "fullname" :halign "center" :wrap "true" :limit-width 25 :text NAME)))
+
+;;  system
+(defwidget system []
+	(box :class "genwin"
+		:vexpand "false"
+		:hexpand "false"
+		(box :orientation "v"
+			:spacing 25
+			:halign "center"
+			:valign "center"
+			:space-evenly "false"
+			:vexpand "false"
+			:hexpand "false"
+
+			(box :class "cpu_bar"
+				:orientation "h"
+				:spacing 20
+				:space-evenly "false"
+				:vexpand "false"
+				:hexpand "false"
+				(label :class "cpu_icon" :text "")
+				(scale
+					:min 0
+					:max 100
+					:value {EWW_CPU.avg}
+					:active "false"))
+
+			(box :class "mem_bar"
+				:orientation "h"
+				:spacing 20
+				:space-evenly "false"
+				:vexpand "false"
+				:hexpand "false"
+				(label :class "mem_icon" :text "")
+				(scale :min 0
+					:max 100
+					:value {EWW_RAM.used_mem_perc}
+					:active "false"))
+
+			(box :class "bri_bar"
+				:orientation "h"
+				:spacing 20
+				:space-evenly "false"
+				:vexpand "false"
+				:hexpand "false"
+				(label :class "bri_icon" :text "")
+				(scale :min 1
+					:max 101
+					:value current-brightness
+					:onchange "xbacklight -set {}"))
+
+			(box :class "vol_bar"
+				:orientation "h"
+				:spacing 20
+				:space-evenly "false"
+				:vexpand "false"
+				:hexpand "false"
+				(label :class "vol_icon" :text "")
+				(scale :min 0
+					:max 101
+					:value current-volume
+					:flipped false
+					:orientation "h"
+					:onchange "pactl set-sink-volume @DEFAULT_SINK@ {}%")))))
+
+(defwidget cal []
+	(box :class "cal-box" :orientation "h"
+		(box :class "cal-inner-box"
+			(calendar :class "cal" :year calendar_year :show-details "true"))))
+;;  clock
+(defwidget clock []
+	(box :class "time"
+		:orientation "v"
+		:space-evenly "false"
+		:valign "center"
+		:halign "center"
+		:spacing "10"
+
+		(box :orientation "h"
+			:class "date"
+			:space-evenly "false"
+			:spacing "10"
+			(label :class "hour" :text "${hour}")
+			(label :class "separator-clock" :text ":")
+			(label :class "min" :text "${minute}"))
+		(label	:class "day" :text "${date}")))
+
+;; Powermenu
+(defwidget powermenu []
+	(box :class "power"
+		:orientation "h"
+
+		(button :class "button-shutdown" :tooltip "Shutdown" :onclick "systemctl poweroff"  "")
+		(button :class "button-reboot"   :tooltip "Reboot"   :onclick "systemctl reboot"	"")
+		(button :class "button-quit"     :tooltip "Logout"   :onclick "killall bspwm" "")
+		(button :class "button-lock"     :tooltip "Lock"     :onclick "betterlockscreen -l"	"")
+		(button :class "button-exit"     :tooltip "Quit eww" :onclick "$HOME/.local/bin/eww -c $HOME/.config/eww/dashboard close-all" "")))
+
+(defwindow sidebar
+	:geometry (geometry :y 30 :width 350 :height 1050)
+	:monitor 0
+	:hexpand "false"
+	:vexpand "false"
+	:windowtype "dock"
+	(sidebar))
+
+(defwidget sidebar []
+	(box :class "sidebar" :orientation "v" :vexpand "false" :hexpand "false"
+		(top)
+		(bottom)))
+
+;; Top ;;
+(defwidget top []
+	(box :orientation "v" :space-evenly "false" :valign "start"
+		:spacing 15
+		(clock)
+		(cal)
+		(system)))
+
+;; Bottom ;;
+(defwidget bottom []
+	(box :orientation "v" :valign "end"
+		(powermenu)))
