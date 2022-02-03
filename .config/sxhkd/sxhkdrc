@@ -23,6 +23,14 @@ super + r
 alt + shift + 2
 	flameshot gui
 
+# Toggle eww dashboard
+super + grave
+    sh $HOME/.local/bin/dashboard
+
+# Toggle notification center
+super + o
+    sh $HOME/.local/bin/notificationcenter
+
 # switch windows
 super + Tab
 	rofi -show window -theme ~/.config/rofi/window.rasi

@@ -1,10 +1,15 @@
 #!/bin/bash
 
-active_text_color="#d8dee9"
-active_bg="#3b4252"
-active_underline="#81a1c1"
+# Colors
+source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g')
 
-inactive_text_color="#a5abb6"
+(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g') > /tmp/test.txt
+
+active_text_color="$cyan"
+active_bg="$background_alt"
+active_underline=
+
+inactive_text_color="$foreground"
 inactive_bg=
 inactive_underline=
 
@@ -13,7 +18,7 @@ hidden_bg=
 hidden_underline=
 
 char_limit=10
-class_char_limit=8
+class_char_limit=
 
 active_left="%{F$active_text_color}"
 active_right="%{F-}"
@@ -89,11 +94,11 @@ add_action() {
 	id_focused=$(bspc query -N -n)
 	win_id=$(wmctrl -lx | awk '{$2=$3=$4=" ";print}')
 	while IFS="[ .\.]" read -r w; do
-		w_name=$(wm_title $w)
+		# w_name=$(wm_title $w)
 
-		if [ "${#w_name}" -gt "$char_limit" ]; then
-			w_name="$(echo "$w_name" | cut -c1-$((char_limit-1)))…"
-		fi
+		# if [ "${#w_name}" -gt "$char_limit" ]; then
+		# 	w_name="$(echo "$w_name" | cut -c1-$((char_limit-1)))…"
+		# fi
 
 		w_class=$(wm_class $w)
 
@@ -101,7 +106,7 @@ add_action() {
 			w_class="$(echo "$w_class" | cut -c1-$((class_char_limit-1)))"
 		fi
 
-		w_name=" $w_name - $w_class "
+		w_name=" $w_class "
 
 		# Use user-selected character case
 		case "$char_case" in
