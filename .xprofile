@@ -1,0 +1,4 @@
+# Load Xresources
+xrdb -load ~/.Xresources & 
+
+autorandr --change &

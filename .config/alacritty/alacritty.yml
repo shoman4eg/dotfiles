@@ -111,7 +111,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: "Fira Code Medium"
+    family: "Monolisa"
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -179,7 +179,10 @@ schemes:
     # Default colors
     primary:
       background: '0x1a1b26'
-      foreground: '0xc0caf5'
+      foreground: '0xD8DEE9'
+    cursor:
+      text: '0x2E3440'
+      cursor: '0xD8DEE9'
 
     # Normal colors
     normal:
@@ -190,7 +193,7 @@ schemes:
       blue:    '0x7aa2f7'
       magenta: '0xbb9af7'
       cyan:    '0x7dcfff'
-      white:   '0xa9b1d6'
+      white:   '0xD8DEE9'
 
     # Bright colors
     bright:
@@ -284,7 +287,7 @@ schemes:
       white: '0xAEB3BB'
 
 # Colors
-colors: *tokyo-night-storm
+colors: *tokyo-night
 
 # Visual Bell
 #

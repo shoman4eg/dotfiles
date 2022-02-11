@@ -29,7 +29,22 @@ hidden_right="%{F-}"
 separator="  "
 separator="%{F$inactive_text_color}$separator%{F-}"
 
-char_case="upper" # normal, upper, lower
+char_case="normal" # normal, upper, lower
+
+declare -A program_icons=(
+	[CODE]=' VS Code'
+	[ALACRITTY]=' Term'
+	[TELEGRAMDESKTOP]=' Telegram'
+	[SLACK]=' Slack'
+	[FIREFOXDEVELOPEREDITION]=' Firefox'
+	[FIREFOX]=' Firefox'
+	[JETBRAINS-PHPSTORM]=' Storm'
+	[GOOGLE-CHROME]=' Chrome'
+	[IWGTK]=' IW'
+	[DISCORD]=' Discord'
+	[THUNAR]=' Thunar'
+	[LXAPPEARANCE]=' Look & feel'
+)
 
 if [ -n "$active_bg" ]; then
 	active_left="${active_left}%{B$active_bg}"
@@ -106,7 +121,13 @@ add_action() {
 			w_class="$(echo "$w_class" | cut -c1-$((class_char_limit-1)))"
 		fi
 
-		w_name=" $w_class "
+		find_class=$(echo "$w_class" | tr '[:lower:]' '[:upper:]')
+
+		if [ "${program_icons[$find_class]+_}" ]; then
+			w_name=" ${program_icons[$find_class]} "
+		else
+			w_name=" $w_class "
+		fi
 
 		# Use user-selected character case
 		case "$char_case" in
@@ -117,6 +138,8 @@ add_action() {
 				echo "$w_name" | tr '[:lower:]' '[:upper:]'
 				) ;;
 		esac
+
+
 
 		if [ "$w" = "$id_focused" ]; then
 			w_name="${active_left}${w_name}${active_right}"
@@ -134,6 +157,7 @@ add_action() {
 		printf "%s" "%{A1:$on_click bspc node -f $w:}"
 		printf "%s" "%{A2:$on_click close $w:}"
 		# Print the final window name
+
 		printf "%s" "$w_name"
 		printf "%s" "%{A}%{A}"
 
