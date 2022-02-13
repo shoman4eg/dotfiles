@@ -3,8 +3,6 @@
 # Colors
 source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g')
 
-(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g') > /tmp/test.txt
-
 active_text_color="$cyan"
 active_bg="$background_alt"
 active_underline=
@@ -67,6 +65,10 @@ wm_title() {
 	echo $(xtitle $1)
 }
 
+node_flags() {
+	echo $(bspc query -n $1 --tree | jq '. | {sticky,private,locked,marked} | to_entries | .[] | select(.value) | .key | .[0:1]' | sed 's/"//g' | tr -d '\n')
+}
+
 # Truncate displayed name to user-selected limit
 truncate() {
 	if [ "${#1}" -gt "$2" ]; then
@@ -97,7 +99,7 @@ raise_or_minimize() {
 }
 
 close() {
-	wmctrl -ic "$1"
+	bspc node -c "$1"
 }
 
 add_action() {
@@ -116,6 +118,7 @@ add_action() {
 		# fi
 
 		w_class=$(wm_class $w)
+		node_flags=$(node_flags $w)
 
 		if [ "${#w_class}" -gt "$class_char_limit" ]; then
 			w_class="$(echo "$w_class" | cut -c1-$((class_char_limit-1)))"
@@ -139,7 +142,7 @@ add_action() {
 				) ;;
 		esac
 
-
+		w_name="${w_name} ${node_flags} "
 
 		if [ "$w" = "$id_focused" ]; then
 			w_name="${active_left}${w_name}${active_right}"
@@ -172,4 +175,4 @@ add_action() {
 	echo ""
 }
 
-xtitle -s | while read; do add_action; done
+bspc subscribe node_add node_remove node_focus node_flag desktop_focus | while read; do add_action; done
