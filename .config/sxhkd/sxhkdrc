@@ -28,7 +28,7 @@ super + grave
     sh $HOME/.local/bin/dashboard
 
 # Toggle notification center
-super + o
+super + p
     sh $HOME/.local/bin/notificationcenter
 
 # switch windows
