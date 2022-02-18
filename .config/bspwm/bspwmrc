@@ -10,8 +10,6 @@ export SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 # pkill sxhkd
 pgrep -x sxhkd > /dev/null || sxhkd &
 
-xrdb -load ~/.Xresources
-
 ### Monitor
 for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
   bspc monitor $m -d 1 2 3 4 5 6
@@ -66,12 +64,12 @@ bspc rule -a "Chromium"            desktop=^1 follow=on
 bspc rule -a "Ptask"               desktop=^2 follow=on
 bspc rule -a "code-oss"            desktop=^4 follow=on
 bspc rule -a "Slack"               desktop=^3 follow=on
+bspc rule -a "TelegramDesktop"     desktop=^3 follow=on
 bspc rule -a "discord"             desktop=^3 follow=on
 
 bspc config external_rules_command "$HOME/.local/bin/bspwm_external_rules"
 
 wmname LG3D
-
 ### Non-bspwm specific settings
 # xset s 0 0
 # xset dpms 0 0 0
@@ -83,4 +81,5 @@ wmname LG3D
 ~/.fehbg &
 ~/.config/polybar/launch.sh &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-xsetroot -cursor_name left_ptr
+xsetroot -cursor_name left_ptr &
+xrdb -load ~/.Xresources &

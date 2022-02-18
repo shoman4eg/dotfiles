@@ -48,10 +48,6 @@ window:
   # Values for `decorations`:
   #     - full: Borders and title bar
   #     - none: Neither borders nor title bar
-  #
-  # Values for `decorations` (macOS only):
-  #     - transparent: Title bar, transparent background and title bar buttons
-  #     - buttonless: Title bar, transparent background, but no title bar buttons
   decorations: full
 
   # Startup Mode (changes require restart)
@@ -60,9 +56,6 @@ window:
   #   - Windowed
   #   - Maximized
   #   - Fullscreen
-  #
-  # Values for `startup_mode` (macOS only):
-  #   - SimpleFullscreen
   startup_mode: Windowed
 
   # Window title
@@ -111,7 +104,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: "Monolisa"
+    family: "Source Code Pro"
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -382,7 +375,7 @@ cursor:
   #   - ▇ Block
   #   - _ Underline
   #   - | Beam
-  style: Beam
+  style: Block
 
 # If this is `true`, the cursor will be rendered as a hollow box when the
   # window is not focused.
