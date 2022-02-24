@@ -1,5 +1,5 @@
-! ===== Import color scheme =====Wz
-#include ".config/Xresources/nord.Xresources"
+! ===== Import color scheme =====
+#include ".config/Xresources/tokyonight.Xresources"
 
 ! ===== Cursor theme =====
 xcursor.theme:       Vanilla-DMZ

@@ -4,21 +4,21 @@
 @import "theme"
 
 window {
-  borer: 1px;
+	borer: 1px;
 }
 
 /** The search bar **/
 inputbar {
-  border: 0 0 1px 0;
-  border-color: @polar-2;
-  children: [prompt, entry];
+	border: 0 0 1px 0;
+	border-color: @polar-2;
+	children: [prompt, entry];
 }
 
 /* Text search bar */
 entry {
-  padding: 16px;
-  text-color: @snow-1;
-  font: "Inter 14";
+	padding: 16px;
+	text-color: @snow-1;
+	font: "Inter 14";
 }
 
 /* The area to the left of the text search box */
@@ -30,9 +30,9 @@ prompt {
 }
 
 listview {
-  cycle: false;
-  lines: 10;
-  scrollbar: false;
+	cycle: false;
+	lines: 10;
+	scrollbar: false;
 }
 
 #scrollbar {
@@ -41,14 +41,14 @@ listview {
 }
 
 element {
-  font: " 20";
-  border: 0 0 1px 0;
-  padding: 12px;
-  spacing: 10px;
+	font: " 20";
+	border: 0 0 1px 0;
+	padding: 12px;
+	spacing: 10px;
 }
 
 element selected {
-  text-color: @snow-3;
+	text-color: @snow-3;
 	background-color: @polar-2;
 }
 
@@ -56,7 +56,7 @@ element-icon selected {
 	background-color: @polar-2;
 }
 element-text selected {
-  background-color: @polar-2;
+	background-color: @polar-2;
 }
 
 element-icon {

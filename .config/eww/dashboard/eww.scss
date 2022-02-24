@@ -1,0 +1,354 @@
+$background: #1A1B26;
+$background-alt: #16161E;
+$foreground: #a9b1d6;
+$blue: #7AA2F7;
+$magenta: #BB9AF7;
+$yellow: #E0AF68;
+$green: #73DACA;
+$red: #f7768e;
+$cyan: #7dcfff;
+$white: #a9b1d6;
+$white-alt: #c0caf5;
+$black: #15161e;
+$black-alt: #414868;
+
+
+//
+// Global
+//
+
+* {
+	all: unset;
+}
+.genwin {
+	background-color: $background;
+	color: $foreground;
+	border-radius: .3rem;
+}
+.sidebar {
+	background-color: $background;
+}
+
+//
+// Clock
+//
+
+.time {
+	margin-top: 2rem;
+}
+.clock {
+	padding: 2rem 4.2rem 2rem 4.2rem;
+	background-color: $background;
+	color: $foreground;
+	border-radius: .3rem;
+	margin-top: 2rem;
+}
+
+.hour,
+.min,
+.separator-clock {
+	font-family: Iosevka;
+	font-weight: bold;
+	font-size: 4em;
+	margin-left: .8rem;
+}
+
+.separator-clock {
+	margin-top: -.5rem;
+}
+
+.day {
+	font-family: Inter;
+	font-style: italic;
+	font-size: 1em;
+}
+
+//
+// System
+//
+
+.cpu_icon,
+.mem_icon,
+.bri_icon,
+.vol_icon {
+	font-family: feather;
+	font-size: 1.5rem;
+	font-weight: normal;
+}
+
+.cpu_icon {
+	color: $blue;
+}
+
+.mem_icon {
+	color: $magenta;
+}
+
+.bri_icon {
+	color: $yellow;
+}
+
+.vol_icon {
+	color: $green;
+}
+
+.cpu_bar,
+.mem_bar,
+.bri_bar,
+.vol_bar,
+scale trough {
+	all: unset;
+	background-color: $background-alt;
+	border-radius: 1rem;
+	min-height: 15px;
+	min-width: 250px;
+}
+
+.cpu_bar,
+.mem_bar,
+.bri_bar,
+.vol_bar,
+scale trough highlight {
+	all: unset;
+	border-radius: 1rem;
+}
+
+.cpu_bar scale trough highlight {
+	background-color: $blue;
+}
+
+.mem_bar scale trough highlight {
+	background-color: $magenta;
+}
+
+.bri_bar scale trough highlight {
+	background-color: $yellow;
+}
+
+.vol_bar scale trough highlight {
+	background-color: $green;
+}
+
+//
+// Power menu
+//
+.power {
+	background-color: $background;
+	color: $foreground;
+	border-radius: .8rem;
+	font-family: "feather";
+	font-weight: bold;
+	font-size: 2em;
+	margin-bottom: 3.5em;
+}
+
+.button {
+	&-exit {
+		color: $red;
+	}
+	&-lock {
+		color: $yellow;
+	}
+	&-quit {
+		color: $cyan;
+	}
+	&-reboot {
+		color: $blue;
+	}
+	&-shutdown {
+		color: $black-alt;
+	}
+}
+
+.exit {
+	font-size: 2.5rem;
+}
+
+//
+// Calendar
+//
+.cal-box {
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+calendar {
+	// padding: .4rem .3rem 0 .3rem;
+	font-family: Iosevka;
+	font-size: 1.3em;
+	font-weight: 500;
+
+	&:selected {
+		background-color: $cyan;
+		border-radius: .3rem;
+		color: $background;
+		font-weight: 700;
+	}
+
+	.header {
+		color: $blue;
+		font-weight: bold;
+	}
+
+	.button {
+		color: $magenta
+	}
+
+	.highlight {
+		color: $magenta;
+		font-weight: 700;
+	}
+
+	&:indeterminate {
+		color: $background;
+	}
+}
+
+
+
+// /** Generic window ***********************************/
+
+
+// /** Profile ******************************************/
+// .face {
+// 	background-image: url('images/profile.png');
+// 	background-size: 110px;
+// 	background-position: 50% 35%;
+// 	min-height: 110px;
+// 	min-width: 110px;
+// 	margin: 20px 0px 0px 0px;
+// 	border-radius: 100%;
+// }
+
+// .fullname {
+// 	font-family: Cartograph CF;
+// 	font-style: italic;
+// 	color: $foreground;
+// 	font-size: 17px;
+// 	font-weight: bold;
+// }
+
+// /** System ********************************************/
+// .cpu_icon,
+// .mem_icon,
+// .bri_icon,
+// .vol_icon {
+// 	font-family: feather;
+// 	font-size: 20px;
+// 	font-weight: normal;
+// }
+
+// .cpu_icon {
+// 	color: $blue;
+// }
+
+// .mem_icon {
+// 	color: $purple;
+// }
+
+// .bri_icon {
+// 	color: $yellow;
+// }
+
+// .vol_icon {
+// 	color: $green;
+// }
+
+// .cpu_bar,
+// .mem_bar,
+// .bri_bar,
+// .vol_bar,
+// scale trough {
+// 	all: unset;
+// 	background-color: $background-alt;
+// 	border-radius: 16px;
+// 	min-height: 15px;
+// 	min-width: 250px;
+// }
+
+// .cpu_bar,
+// .mem_bar,
+// .bri_bar,
+// .vol_bar,
+// scale trough highlight {
+// 	all: unset;
+// 	border-radius: 16px;
+// }
+
+// .cpu_bar scale trough highlight {
+// 	background-color: $blue;
+// }
+
+// .mem_bar scale trough highlight {
+// 	background-color: $purple;
+// }
+
+// .bri_bar scale trough highlight {
+// 	background-color: $yellow;
+// }
+
+// .vol_bar scale trough highlight {
+// 	background-color: $green;
+// }
+
+// // /** Music ***************************************/
+// // .player {
+// // 	background-color: $background;
+// // 	padding: 1.5rem 1.5rem 0 1.5rem;
+// // 	border-radius: 12px;
+// // }
+
+// // .album_art {
+// // 	background-size: cover;
+// // 	background-position: center;
+// // 	min-height: 100px;
+// // 	border-radius: 12px;
+// // }
+
+// // .song {
+// // 	font-family: Cartograph CF;
+// // 	font-style: italic;
+// // 	color: $foreground;
+// // 	font-size: 14px;
+// // 	font-weight: bold;
+// // 	margin: 20px 0px 0px 0px;
+// // }
+
+// // .btn_prev,
+// // .btn_play,
+// // .btn_next {
+// // 	font-family: Material Icons;
+// // 	margin: -5px 0 1rem 0;
+// // }
+
+// // .btn_prev {
+// // 	color: $foreground;
+// // 	font-size: 20px;
+// // 	font-weight: normal;
+// // }
+
+// // .btn_play {
+// // 	color: $foreground;
+// // 	font-size: 24px;
+// // 	font-weight: bold;
+// // }
+
+// // .btn_next {
+// // 	color: $foreground;
+// // 	font-size: 20px;
+// // 	font-weight: normal;
+// // }
+
+// // /** Quote ******************************************/
+// // .quote {
+// // 	background-color: $background;
+// // 	border-radius: 12px;
+// // 	padding: 1.5rem;
+// // }
+
+// // .quote-text {
+// // 	font-family: Cartograph CF;
+// // 	font-style: italic;
+// // 	font-size: 1rem;
+// // 	color: $foreground;
+// // }

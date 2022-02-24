@@ -5,9 +5,6 @@
 # set by alacritty itself.
 env:
   TERM: tmux-256color
-imports:
-  - ~/.config/alacritty/tokyo-night.yaml
-  - ~/.config/alacritty/nord.yaml
 #env:
   # TERM variable
   #
@@ -51,10 +48,6 @@ window:
   # Values for `decorations`:
   #     - full: Borders and title bar
   #     - none: Neither borders nor title bar
-  #
-  # Values for `decorations` (macOS only):
-  #     - transparent: Title bar, transparent background and title bar buttons
-  #     - buttonless: Title bar, transparent background, but no title bar buttons
   decorations: full
 
   # Startup Mode (changes require restart)
@@ -63,9 +56,6 @@ window:
   #   - Windowed
   #   - Maximized
   #   - Fullscreen
-  #
-  # Values for `startup_mode` (macOS only):
-  #   - SimpleFullscreen
   startup_mode: Windowed
 
   # Window title
@@ -114,7 +104,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: "Fira Code"
+    family: "Source Code Pro"
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -182,29 +172,35 @@ schemes:
     # Default colors
     primary:
       background: '0x1a1b26'
-      foreground: '0xa9b1d6'
+      foreground: '0xD8DEE9'
+    cursor:
+      text: '0x2E3440'
+      cursor: '0xD8DEE9'
 
     # Normal colors
     normal:
-      black:   '0x32344a'
+      black:   '0x15161E'
       red:     '0xf7768e'
       green:   '0x9ece6a'
       yellow:  '0xe0af68'
       blue:    '0x7aa2f7'
-      magenta: '0xad8ee6'
-      cyan:    '0x449dab'
-      white:   '0x787c99'
+      magenta: '0xbb9af7'
+      cyan:    '0x7dcfff'
+      white:   '0xD8DEE9'
 
     # Bright colors
     bright:
-      black:   '0x444b6a'
-      red:     '0xff7a93'
-      green:   '0xb9f27c'
-      yellow:  '0xff9e64'
-      blue:    '0x7da6ff'
+      black:   '0x414868'
+      red:     '0xf7768e'
+      green:   '0x9ece6a'
+      yellow:  '0xe0af68'
+      blue:    '0x7aa2f7'
       magenta: '0xbb9af7'
-      cyan:    '0x0db9d7'
-      white:   '0xacb0d0'
+      cyan:    '0x7dcfff'
+      white:   '0xc0caf5'
+    indexed_colors:
+    - { index: 16, color: '0xff9e64' }
+    - { index: 17, color: '0xdb4b4b' }
 
   tokyo-night-storm: &tokyo-night-storm
     # Default colors
@@ -284,7 +280,7 @@ schemes:
       white: '0xAEB3BB'
 
 # Colors
-colors: *tokyo-night-storm
+colors: *tokyo-night
 
 # Visual Bell
 #
@@ -379,7 +375,7 @@ cursor:
   #   - ▇ Block
   #   - _ Underline
   #   - | Beam
-  style: Beam
+  style: Block
 
 # If this is `true`, the cursor will be rendered as a hollow box when the
   # window is not focused.

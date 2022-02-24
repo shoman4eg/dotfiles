@@ -1,10 +1,13 @@
 #!/bin/bash
 
-active_text_color="#d8dee9"
-active_bg="#3b4252"
-active_underline="#81a1c1"
+# Colors
+source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g')
 
-inactive_text_color="#a5abb6"
+active_text_color="$cyan"
+active_bg="$background_alt"
+active_underline=
+
+inactive_text_color="$foreground"
 inactive_bg=
 inactive_underline=
 
@@ -13,7 +16,7 @@ hidden_bg=
 hidden_underline=
 
 char_limit=10
-class_char_limit=8
+class_char_limit=
 
 active_left="%{F$active_text_color}"
 active_right="%{F-}"
@@ -24,7 +27,22 @@ hidden_right="%{F-}"
 separator="  "
 separator="%{F$inactive_text_color}$separator%{F-}"
 
-char_case="upper" # normal, upper, lower
+char_case="normal" # normal, upper, lower
+
+declare -A program_icons=(
+	[CODE]=' VS Code'
+	[ALACRITTY]=' Term'
+	[TELEGRAMDESKTOP]=' Telegram'
+	[SLACK]=' Slack'
+	[FIREFOXDEVELOPEREDITION]=' Firefox'
+	[FIREFOX]=' Firefox'
+	[JETBRAINS-PHPSTORM]=' Storm'
+	[GOOGLE-CHROME]=' Chrome'
+	[IWGTK]=' IW'
+	[DISCORD]=' Discord'
+	[THUNAR]=' Thunar'
+	[LXAPPEARANCE]=' Look & feel'
+)
 
 if [ -n "$active_bg" ]; then
 	active_left="${active_left}%{B$active_bg}"
@@ -45,6 +63,10 @@ wm_class() {
 }
 wm_title() {
 	echo $(xtitle $1)
+}
+
+node_flags() {
+	echo $(bspc query -n $1 --tree | jq '. | {sticky,private,locked,marked} | to_entries | .[] | select(.value) | .key | .[0:1]' | sed 's/"//g' | tr -d '\n')
 }
 
 # Truncate displayed name to user-selected limit
@@ -77,7 +99,7 @@ raise_or_minimize() {
 }
 
 close() {
-	wmctrl -ic "$1"
+	bspc node -c "$1"
 }
 
 add_action() {
@@ -89,19 +111,26 @@ add_action() {
 	id_focused=$(bspc query -N -n)
 	win_id=$(wmctrl -lx | awk '{$2=$3=$4=" ";print}')
 	while IFS="[ .\.]" read -r w; do
-		w_name=$(wm_title $w)
+		# w_name=$(wm_title $w)
 
-		if [ "${#w_name}" -gt "$char_limit" ]; then
-			w_name="$(echo "$w_name" | cut -c1-$((char_limit-1)))…"
-		fi
+		# if [ "${#w_name}" -gt "$char_limit" ]; then
+		# 	w_name="$(echo "$w_name" | cut -c1-$((char_limit-1)))…"
+		# fi
 
 		w_class=$(wm_class $w)
+		node_flags=$(node_flags $w)
 
 		if [ "${#w_class}" -gt "$class_char_limit" ]; then
 			w_class="$(echo "$w_class" | cut -c1-$((class_char_limit-1)))"
 		fi
 
-		w_name=" $w_name - $w_class "
+		find_class=$(echo "$w_class" | tr '[:lower:]' '[:upper:]')
+
+		if [ "${program_icons[$find_class]+_}" ]; then
+			w_name=" ${program_icons[$find_class]} "
+		else
+			w_name=" $w_class "
+		fi
 
 		# Use user-selected character case
 		case "$char_case" in
@@ -112,6 +141,8 @@ add_action() {
 				echo "$w_name" | tr '[:lower:]' '[:upper:]'
 				) ;;
 		esac
+
+		w_name="${w_name} ${node_flags} "
 
 		if [ "$w" = "$id_focused" ]; then
 			w_name="${active_left}${w_name}${active_right}"
@@ -129,6 +160,7 @@ add_action() {
 		printf "%s" "%{A1:$on_click bspc node -f $w:}"
 		printf "%s" "%{A2:$on_click close $w:}"
 		# Print the final window name
+
 		printf "%s" "$w_name"
 		printf "%s" "%{A}%{A}"
 
@@ -143,4 +175,4 @@ add_action() {
 	echo ""
 }
 
-xtitle -s | while read; do add_action; done
+bspc subscribe node_add node_remove node_focus node_flag desktop_focus | while read; do add_action; done
