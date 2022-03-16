@@ -5,15 +5,12 @@ source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/
 
 active_text_color="$cyan"
 active_bg="$background_alt"
-active_underline=
 
 inactive_text_color="$foreground"
 inactive_bg=
-inactive_underline=
 
 hidden_text_color="#4c566a"
 hidden_bg=
-hidden_underline=
 
 char_limit=10
 class_char_limit=10
@@ -32,14 +29,14 @@ char_case="normal" # normal, upper, lower
 
 declare -A program_icons=(
 	[CODE]=' VS Code'
-	[ALACRITTY]=' Term'
+	[ALACRITTY]=' Terminal'
 	[TELEGRAMDESKTOP]=' Telegram'
 	[SLACK]=' Slack'
 	[FIREFOXDEVELOPEREDITION]=' Firefox'
 	[FIREFOX]=' Firefox'
-	[JETBRAINS-PHPSTORM]=' Storm'
-	[GOOGLE-CHROME]=' Chrome'
-	[IWGTK]=' IW'
+	[JETBRAINS-PHPSTORM]=' phpStorm'
+	[GOOGLE-CHROME]=' Google Chrome'
+	[IWGTK]=' Wifi settings'
 	[DISCORD]=' Discord'
 	[THUNAR]=' Thunar'
 	[LXAPPEARANCE]=' Look & feel'
@@ -55,16 +52,9 @@ if [ -n "$inactive_bg" ]; then
 	inactive_right="%{B-}${inactive_right}"
 fi
 
-format_underline() {
-	echo -n "%{u#0a6cf5}%{+u}$(shorten "$1")%{-u}   "
-}
 
 wm_class() {
-	echo $(xprop WM_CLASS -id $1 | awk '{print $4}' | sed -e 's/^"//' -e 's/"$//')
-}
-
-wm_title() {
-	echo $(xtitle $1)
+	echo $(bspc query -T -n $1 | jq .client.className | sed -e 's/^"//' -e 's/"$//')
 }
 
 node_flags() {
@@ -119,17 +109,15 @@ add_action() {
 	hidden_ids=$(get_hidden_wid)
 	on_click="$0"
 	while IFS="[ .\.]" read -r w; do
-		# w_name=$(wm_title $w)
-
-		# if [ "${#w_name}" -gt "$char_limit" ]; then
-		# 	w_name="$(echo "$w_name" | cut -c1-$((char_limit-1)))…"
-		# fi
-
+		if [ "$w" == "" ]; then
+			continue
+		fi
 		w_class=$(wm_class $w)
 		node_flags=$(node_flags $w)
 
 		find_class=$(echo "$w_class" | tr '[:lower:]' '[:upper:]')
 
+		# Find name with icon
 		if [ "${program_icons[$find_class]+_}" ]; then
 			w_name=" ${program_icons[$find_class]} "
 		else
@@ -145,8 +133,6 @@ add_action() {
 			echo "$w_name" | tr '[:lower:]' '[:upper:]'
 		) ;;
 		esac
-
-		w_name="${w_name}"
 
 		if [ "$w" = "$focused_id" ]; then
 			w_name="${active_left}${w_name}${active_right}"
@@ -184,7 +170,7 @@ add_action() {
 main() {
 	# If no argument passed...
 	if [ -z "$2" ]; then
-		bspc subscribe node_add node_remove node_focus node_flag desktop_focus | while read; do add_action; done
+		bspc subscribe report | while read; do add_action; done
 	# If arguments are passed, run requested on-click function
 	else
 		"$@"
