@@ -1,28 +1,28 @@
 ;;;; Created & Designed by: https://github.com/rxyhn ;;;;
 
 ;;  Profile vars
-(defvar IMAGE "images/profile.png")
-(defvar NAME "@askew")
+(defvar IMAGE 	"images/profile.png")
+(defvar NAME 	"@askew")
 
 ;;  System vars
 (defpoll current-brightness :interval "2s" "xbacklight -get")
-(defpoll current-volume :interval "2s" "pactl get-sink-volume @DEFAULT_SINK@ | awk '{gsub(\"%,?\", \"\"); print $5; exit}'")
+(defpoll current-volume 	:interval "2s" "~/.local/bin/volume status")
 
 ;;  Time vars
-(defpoll hour :interval "1s" `date +%H`)
-(defpoll minute :interval "1s" `date +%M`)
-(defpoll date :interval "1s" `date "+%A, %d %B"`)
-(defpoll calendar_day :interval "10h" `date +%d`)
+(defpoll hour 			:interval "1s" `date +%H`)
+(defpoll minute 		:interval "1s" `date +%M`)
+(defpoll date 			:interval "1s" `date "+%A, %d %B"`)
+(defpoll calendar_day 	:interval "10h" `date +%d`)
 (defpoll calendar_month :interval "10h" "($(date +%m)-1)")
-(defpoll calendar_year :interval "10h" `date +%Y`)
+(defpoll calendar_year 	:interval "10h" `date +%Y`)
+
+;; Music Variables
+(defpoll art		:interval "5s"  "~/.config/eww/dashboard/scripts/music_info coverloc")
+(defpoll title		:interval "5s"  "~/.config/eww/dashboard/scripts/music_info title")
+(defpoll artist		:interval "5s"  "~/.config/eww/dashboard/scripts/music_info artist")
+(deflisten playpause "~/.config/eww/dashboard/scripts/music_info tailstatusicon")
 
 ;;  ********************************************************************************
-
-;;  profile
-(defwidget user []
-	(box :class "genwin" :orientation "v" :spacing 20 :space-evenly "false" :vexpand "false" :hexpand "false"
-		(box :class "face" :halign "center" :style "background-image: url('${IMAGE});")
-		(label :class "fullname" :halign "center" :wrap "true" :limit-width 25 :text NAME)))
 
 ;;  system
 (defwidget system []
@@ -43,7 +43,7 @@
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "cpu_icon" :text "")
+				(label :class "cpu_icon" :text "")
 				(scale
 					:min 0
 					:max 100
@@ -56,7 +56,7 @@
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "mem_icon" :text "")
+				(label :class "mem_icon" :text "")
 				(scale :min 0
 					:max 100
 					:value {EWW_RAM.used_mem_perc}
@@ -68,7 +68,7 @@
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "bri_icon" :text "")
+				(label :class "bri_icon" :text "")
 				(scale :min 1
 					:max 101
 					:value current-brightness
@@ -80,18 +80,46 @@
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "vol_icon" :text "")
-				(scale :min 0
+				(label :class "vol_icon" :text "")
+				(scale
+					:min 1
 					:max 101
 					:value current-volume
 					:flipped false
 					:orientation "h"
-					:onchange "pactl set-sink-volume @DEFAULT_SINK@ {}%")))))
+					:onchange "~/.local/bin/volume set {}")))))
+
+;;  Music Widgets
+(defwidget music []
+	(box :class "music-player"
+		:orientation "v"
+		:space-evenly "false"
+		:halign "center"
+	(box :class "album_art"
+		:style "background-image: url('${art}');")
+	(box :orientation "v"
+		:space-evenly "false"
+		:halign "center"
+		:spacing 10
+		(label :class "artist"
+			:limit-width 15
+			:text artist)
+		(label :class "song"
+			:limit-width 20
+			:text title)
+		(box :orientation "h"
+			:space-evenly "false"
+			:halign "center"
+			:spacing 40
+			(button :class "btn_prev" :onclick "~/.config/eww/dashboard/scripts/music_info previous" "")
+			(button :class "btn_play" :onclick "~/.config/eww/dashboard/scripts/music_info toggle" playpause)
+			(button :class "btn_next" :onclick "~/.config/eww/dashboard/scripts/music_info next" "")))))
 
 (defwidget cal []
 	(box :class "cal-box" :orientation "h"
 		(box :class "cal-inner-box"
 			(calendar :class "cal" :year calendar_year :show-details "true"))))
+
 ;;  clock
 (defwidget clock []
 	(box :class "time"
@@ -114,12 +142,11 @@
 (defwidget powermenu []
 	(box :class "power"
 		:orientation "h"
-
-		(button :class "button-shutdown" :tooltip "Shutdown" :onclick "systemctl poweroff"  "")
-		(button :class "button-reboot"   :tooltip "Reboot"   :onclick "systemctl reboot"	"")
-		(button :class "button-quit"     :tooltip "Logout"   :onclick "killall bspwm" "")
-		(button :class "button-lock"     :tooltip "Lock"     :onclick "betterlockscreen -l"	"")
-		(button :class "button-exit"     :tooltip "Quit eww" :onclick "$HOME/.local/bin/eww -c $HOME/.config/eww/dashboard close-all" "")))
+		(button :class "button__shutdown" :tooltip "Shutdown" :onclick "systemctl poweroff" "")
+		(button :class "button__reboot"   :tooltip "Reboot"   :onclick "systemctl reboot" "")
+		(button :class "button__quit"     :tooltip "Logout"   :onclick "killall bspwm" "")
+		(button :class "button__lock"     :tooltip "Lock"     :onclick "betterlockscreen -l" "")
+		(button :class "button__exit"     :tooltip "Quit eww" :onclick "$HOME/.local/bin/eww -c $HOME/.config/eww/dashboard close-all" "")))
 
 (defwindow sidebar
 	:geometry (geometry :y 30 :width 350 :height 1050)
@@ -130,9 +157,8 @@
 	(sidebar))
 
 (defwidget sidebar []
-	(box :class "sidebar" :orientation "v" :vexpand "false" :hexpand "false"
-		(top)
-		(bottom)))
+	(box :class "sidebar" :orientation "v"
+		(top)))
 
 ;; Top ;;
 (defwidget top []
@@ -140,9 +166,6 @@
 		:spacing 15
 		(clock)
 		(cal)
-		(system)))
-
-;; Bottom ;;
-(defwidget bottom []
-	(box :orientation "v" :valign "end"
+		(system)
+		(music)
 		(powermenu)))

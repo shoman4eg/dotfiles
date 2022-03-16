@@ -1,111 +1,263 @@
-#!/bin/bash
+#!/bin/sh
 
-## Get data
-# STATUS="$(mpc status)"
-# COVER="/tmp/.music_cover.jpg"
-# MUSIC_DIR="$HOME/Music"
+# ╔╦╗ ╦ ╦ ╔═╗ ╦ ╔═╗
+# ║║║ ║ ║ ╚═╗ ║ ║
+# ╩ ╩ ╚═╝ ╚═╝ ╩ ╚═╝
 
-# DATA = `dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:org.mpris.MediaPlayer2.Player string:Metadata`
+# author	Niraj
+# github	niraj998
 
-# Playing, Paused or Stopped
-# album = `dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:org.mpris.MediaPlayer2.Player string:Metadata | sed -n '/album/{n;p}' | cut -d '"' -f 2 | head -n 1`
+# ┌─┐┌─┐┌┐┌┌─┐┬┌─┐┬ ┬┬─┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+# │  │ ││││├┤ ││ ┬│ │├┬┘├─┤ │ ││ ││││└─┐
+# └─┘└─┘┘└┘└  ┴└─┘└─┘┴└─┴ ┴ ┴ ┴└─┘┘└┘└─┘
 
-## Get status
-get_status() {
-	status=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus'|egrep -A 1 "string"|cut -b 26-|cut -d '"' -f 1|egrep -v ^$`
-	if [[ "$(pidof spotify || echo 1)" != "1" ]]; then
-		if [[ "$status" == "Playing" ]]; then
-			echo ""
-		else
-			echo ""
-		fi
-	else
-		echo ""
-	fi
+# uncomment your music players below.
+#
+
+# Control="MPD"
+Control=$(playerctl --list-all | grep firefox)
+# [ -n "$(pgrep spotify)" ] && Control="spotify"
+# [ -n "$(pgrep rhythmbox)" ] && Control="rhythmbox"
+# [ -n "$(pgrep audacious)" ] && Control="audacious"
+# [ -n "$(pgrep clementine)" ] && Control="clementine"
+# [ -n "$(pgrep strawberry)" ] && Control="strawberry"
+
+# saves covers here
+Cover=/tmp/cover.png
+# if cover not found in metadata use this instead
+bkpCover=~/.config/eww/dashboard/assets/fallback.png
+# mpd music directory
+mpddir=~/Music
+
+# ┌─┐┬  ┌─┐┬ ┬┌─┐┬─┐┌─┐┌┬┐┬    ┌─┐┌─┐┬─┐┬┌─┐┌┬┐┌─┐
+# ├─┘│  ├─┤└┬┘├┤ ├┬┘│   │ │    └─┐│  ├┬┘│├─┘ │ └─┐
+# ┴  ┴─┘┴ ┴ ┴ └─┘┴└─└─┘ ┴ ┴─┘  └─┘└─┘┴└─┴┴   ┴ └─┘
+
+########################## Title ##########################
+title() {
+	title=$(playerctl --player=$Control metadata --format {{title}})
+	[ -z "$title" ] && title="Nothing Playing"
+	echo "$title"
 }
 
-## Get song
-get_song() {
-	title=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:org.mpris.MediaPlayer2.Player string:Metadata | sed -n '/title/{n;p}' | cut -d '"' -f 2`
-	if [[ "$(pidof spotify || echo 1)" != "1" ]]; then	
-		echo "$title"
-	else
-		echo "Offline"
-	fi
+########################## Artist ##########################
+artist() {
+	artist=$(playerctl --player=$Control metadata --format {{artist}})
+	[ -z "$artist" ] && artist="Offline"
+	echo "$artist"
 }
 
-## Get artist
-get_artist() {
-	artist=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:org.mpris.MediaPlayer2.Player string:Metadata | sed -n '/artist/{n;n;p}' | cut -d '"' -f 2`
-	if [[ "$(pidof spotify || echo 1)" != "1" ]]; then
-        	echo "$artist"
-        else
-                echo "Offline"
-        fi
+########################## Album ##########################
+album() {
+	album=$(playerctl --player=$Control metadata --format {{album}})
+	[ -z "$album" ] && album="Album"
+	echo "$album"
 }
 
-## Get time
-get_time() {
-	time=`mpc status | grep "%)" | awk '{print $4}' | tr -d '(%)'`
-	if [[ -z "$time" ]]; then
-		echo "0"
-	else
-		echo "$time"
-	fi	
-}
-get_ctime() {
-	ctime=`mpc status | grep "#" | awk '{print $3}' | sed 's|/.*||g'`
-	if [[ -z "$ctime" ]]; then
-		echo "0:00"
-	else
-		echo "$ctime"
-	fi	
-}
-get_ttime() {
-	ttime=`mpc -f %time% current`
-	if [[ -z "$ttime" ]]; then
-		echo "0:00"
-	else
-		echo "$ttime"
-	fi	
+########################## Status ##########################
+status() {
+	status=$(playerctl --player=$Control status)
+	[ -z "$status" ] && status="Stopped"
+	echo "$status"
 }
 
-## Get cover
-get_cover() {
-	art=`dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:org.mpris.MediaPlayer2.Player string:Metadata | sed -n '/artUrl/{n;p}' | cut -d '"' -f 2`
-	if [[ "$(pidof spotify || echo 1)" != "1" ]]; then
-		echo "$art"
-	else
-		echo "images/music.png"
-	fi
+########################## Time ##########################
+ctime() {
+	time=$(playerctl --player=$Control position --format "{{ duration(position) }}")
+	[ -z "$time" ] && time="0:00"
+	echo "$time"
 }
 
-# Toggle
-toggle() {
-	if [[ "$(pidof spotify || echo 1)" != "1" ]]; then	
-		dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
-	fi
+########################## Length ##########################
+length() {
+	length=$(playerctl --player=$Control metadata --format "{{ duration(mpris:length) }}")
+	[ -z "$length" ] && length="0:00"
+	echo "$length"
 }
 
-## Execute accordingly
-if [[ "$1" == "--song" ]]; then
-	get_song
-elif [[ "$1" == "--artist" ]]; then
-	get_artist
-elif [[ "$1" == "--status" ]]; then
-	get_status
-elif [[ "$1" == "--time" ]]; then
-	get_time
-elif [[ "$1" == "--ctime" ]]; then
-	get_ctime
-elif [[ "$1" == "--ttime" ]]; then
-	get_ttime
-elif [[ "$1" == "--cover" ]]; then
-	get_cover
-elif [[ "$1" == "--toggle" ]]; then
-	toggle
-elif [[ "$1" == "--next" ]]; then
-	{ dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next; get_cover; }
-elif [[ "$1" == "--prev" ]]; then
-	{ dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous; get_cover; }
-fi
+########################## trackNumber ##########################
+playlist() {
+	playlist=$(playerctl --player=$Control metadata xesam:trackNumber)
+	[ -z "$playlist" ] && playlist="0"
+	echo "$playlist"
+}
+
+########################## Cover ##########################
+cover() {
+	albumart="$(playerctl --player=$Control metadata mpris:artUrl | sed -e 's/open.spotify.com/i.scdn.co/g')"
+	[ $(playerctl --player=$Control metadata mpris:artUrl) ] && curl -s "$albumart" --output $Cover || cp $bkpCover $Cover
+	echo "$Cover"
+}
+
+########################## Statusicon ##########################
+statusicon() {
+	icon=""
+	[ $(playerctl --player=$Control status) = "Playing" ] && icon=""
+	[ $(playerctl --player=$Control status) = "Paused" ] && icon=""
+	echo "$icon"
+}
+
+tailstatusicon() {
+	playerctl status -F 2>/dev/null | {
+		while true; do
+			{
+				read -r event || break
+				icon=""
+				[ $event = "Playing" ] && icon=""
+				[ $event = "Paused" ] && icon=""
+				echo $icon
+			}
+		done
+	}
+}
+
+########################## Lyrics ##########################
+lyrics() {
+	Title=$(playerctl --player=$Control metadata --format {{title}})
+	Artist=$(playerctl --player=$Control metadata --format {{artist}})
+	URL="https://api.lyrics.ovh/v1/$Artist/$Title"
+	lyrics=$(curl -s "$(echo "$URL" | sed s/" "/%20/g | sed s/"&"/%26/g | sed s/,/%2C/g | sed s/-/%2D/g)" | jq '.lyrics')
+	[ "$lyrics" = "null" ] && lyrics=$(curl -s --get "https://makeitpersonal.co/lyrics" --data-urlencode "artist=$Artist" --data-urlencode "title=$Title")
+	printf "$lyrics" | less
+}
+
+# ┌┬┐┌─┐┌┬┐  ┌─┐┌─┐┬─┐┬┌─┐┌┬┐┌─┐
+# │││├─┘ ││  └─┐│  ├┬┘│├─┘ │ └─┐
+# ┴ ┴┴  ─┴┘  └─┘└─┘┴└─┴┴   ┴ └─┘
+
+########################## Title ##########################
+mpctitle() {
+	title=$(mpc -f %title% current)
+	[ -z "$title" ] && title="Nothing Playing"
+	echo "$title"
+}
+
+########################## Artist ##########################
+mpcartist() {
+	artist=$(mpc -f %artist% current)
+	[ -z "$artist" ] && artist="Offline"
+	echo "$artist"
+}
+
+########################## Album ##########################
+mpcalbum() {
+	album=$(mpc -f %album% current)
+	[ -z "$album" ] && album="Album"
+	echo "$album"
+}
+
+########################## Cover ##########################
+mpccover() {
+	ffmpeg -i "$mpddir"/"$(mpc current -f %file%)" "${Cover}" -y || cp $bkpCover $Cover
+	echo "$Cover" && exit
+}
+
+########################## Time ##########################
+mpctime() {
+	time=$(mpc status %currenttime%)
+	[ -z "$time" ] && time="0:00"
+	echo "$time"
+}
+
+########################## Length ##########################
+mpclength() {
+	length=$(mpc status %totaltime%)
+	[ -z "$length" ] && length="0:00"
+	echo "$length"
+}
+
+########################## Icon ##########################
+mpcicon() {
+	status=$(mpc status | head -2 | tail -1 | cut -c2-7)
+	icon=""
+	[ "$status" = "playin" ] && icon=""
+	[ "$status" = "paused" ] && icon=""
+	echo "$icon"
+}
+
+########################## Status ##########################
+mpcstatus() {
+	stat=$(mpc status | head -2 | tail -1 | cut -c2-7)
+	status="Stopped"
+	[ "$stat" = "playin" ] && status="Playing"
+	[ "$stat" = "paused" ] && status="Paused"
+	echo "$status"
+}
+
+########################## Percent ##########################
+mpcperc() {
+	perc=$(mpc status %percenttime%)
+	[ -z "$perc" ] && perc="0"
+	echo "$perc"
+}
+
+########################## Playlist ##########################
+mpcsongpos() {
+	pos=$(mpc status %songpos%)
+	allsongs=$(mpc status %length%)
+	playlist="$pos/$allsongs"
+	[ -z "$pos" ] && playlist="0/0"
+	echo "$playlist"
+}
+
+########################## Lyrics ##########################
+mpclyrics() {
+	Title=$(mpc -f %title% current)
+	Artist=$(mpc -f %artist% current)
+	URL="https://api.lyrics.ovh/v1/$Artist/$Title"
+	lyrics=$(curl -s "$(echo "$URL" | sed s/" "/%20/g | sed s/"&"/%26/g | sed s/,/%2C/g | sed s/-/%2D/g)" | jq '.lyrics')
+	[ "$lyrics" = "null" ] && lyrics=$(curl -s --get "https://makeitpersonal.co/lyrics" --data-urlencode "artist=$Artist" --data-urlencode "title=$Title")
+	printf "$lyrics" | less
+}
+
+# ┬ ┬┌─┐┬  ┌─┐
+# ├─┤├┤ │  ├─┘
+# ┴ ┴└─┘┴─┘┴
+line() {
+	printf "   \033[36m%-12s\033[0m %s\n" "$1" "$2"
+}
+doc() {
+	printf 'Usage: %s \033[36m[options]\033[0m\n\nAvailable options are:\n' $(basename $0)
+	line 'previous' 'previous song'
+    line 'next' 'next song'
+    line "toggle" "toggle between play-pause song"
+    line "title" "shows title of current song"
+    line "album" "shows album of current song"
+    line "artist" "shows artist of current song"
+    line "status" "music status (playing/paused/stopped)"
+    line "statusicon" "music status icons (playing/paused/stopped)"
+    line "coverloc" "saves cover and shows location to cover of current song"
+    line "showcover" "opens cover using feh"
+    line "time" "shows current time of song"
+    line "length" "shows length of song"
+    line "percent" "shows percent song"
+    line "playlist" "shows playlist position of current song"
+    line "lyrics" "shows lyrics"
+    echo
+    exit 1
+}
+
+# ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+# │ │├─┘ │ ││ ││││└─┐
+# └─┘┴   ┴ ┴└─┘┘└┘└─┘
+
+case $1 in
+	next) playerctl --player=$Control next ;;
+	previous) playerctl --player=$Control previous ;;
+	toggle) playerctl --player=$Control play-pause ;;
+	title) title ;;
+	artist) artist ;;
+	album) album ;;
+	status) status ;;
+	statusicon) statusicon ;;
+	tailstatusicon) tailstatusicon ;;
+	player) echo "$Control" ;;
+	coverloc) cover ;;
+	showcover) cover | xargs feh ;;
+	time) ctime ;;
+	length) length ;;
+	percent) echo "0" ;;
+	playlist) playlist ;;
+	lyrics) lyrics ;;
+	*) doc ;;
+esac 2>/dev/null

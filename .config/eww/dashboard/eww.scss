@@ -1,3 +1,4 @@
+// Colors
 $background: #1A1B26;
 $background-alt: #16161E;
 $foreground: #a9b1d6;
@@ -13,29 +14,26 @@ $black: #15161e;
 $black-alt: #414868;
 
 
-//
 // Global
-//
-
 * {
 	all: unset;
 }
+
 .genwin {
 	background-color: $background;
 	color: $foreground;
 	border-radius: .3rem;
 }
+
 .sidebar {
 	background-color: $background;
 }
 
-//
 // Clock
-//
-
 .time {
 	margin-top: 2rem;
 }
+
 .clock {
 	padding: 2rem 4.2rem 2rem 4.2rem;
 	background-color: $background;
@@ -63,15 +61,12 @@ $black-alt: #414868;
 	font-size: 1em;
 }
 
-//
 // System
-//
-
 .cpu_icon,
 .mem_icon,
 .bri_icon,
 .vol_icon {
-	font-family: feather;
+	font-family: "tabler-icons";
 	font-size: 1.5rem;
 	font-weight: normal;
 }
@@ -95,22 +90,18 @@ $black-alt: #414868;
 .cpu_bar,
 .mem_bar,
 .bri_bar,
-.vol_bar,
-scale trough {
-	all: unset;
-	background-color: $background-alt;
-	border-radius: 1rem;
-	min-height: 15px;
-	min-width: 250px;
-}
-
-.cpu_bar,
-.mem_bar,
-.bri_bar,
-.vol_bar,
-scale trough highlight {
-	all: unset;
-	border-radius: 1rem;
+.vol_bar {
+	scale trough {
+		all: unset;
+		background-color: $background-alt;
+		border-radius: 1rem;
+		min-height: 15px;
+		min-width: 250px;
+		highlight {
+			all: unset;
+			border-radius: 1rem;
+		}
+	}
 }
 
 .cpu_bar scale trough highlight {
@@ -129,33 +120,34 @@ scale trough highlight {
 	background-color: $green;
 }
 
-//
 // Power menu
-//
 .power {
 	background-color: $background;
 	color: $foreground;
 	border-radius: .8rem;
-	font-family: "feather";
-	font-weight: bold;
-	font-size: 2em;
-	margin-bottom: 3.5em;
+	font-family: "tabler-icons";
+	font-size: 2.4em;
+	margin-top: 1.5em;
 }
 
 .button {
-	&-exit {
+	&__exit {
 		color: $red;
 	}
-	&-lock {
+
+	&__lock {
 		color: $yellow;
 	}
-	&-quit {
+
+	&__quit {
 		color: $cyan;
 	}
-	&-reboot {
+
+	&__reboot {
 		color: $blue;
 	}
-	&-shutdown {
+
+	&__shutdown {
 		color: $black-alt;
 	}
 }
@@ -204,6 +196,64 @@ calendar {
 	}
 }
 
+// Music player
+.music-player {
+	background-color: $background;
+	padding: 0 1.5rem 1rem 1.5rem;
+	border-radius: 12px;
+	margin: .5rem;
+}
+
+.album_art {
+	background-size: cover;
+	background-position: center;
+	border-radius: 12px;
+	margin: 1rem 2rem 0.5rem 2rem;
+	padding: 5rem;
+}
+
+.artist {
+	font-family: Cartograph CF;
+	font-style: italic;
+	font-weight: bold;
+	color: $foreground;
+	font-size: 1.2em;
+}
+
+.song {
+	font-family: Cartograph CF;
+	font-style: italic;
+	font-size: 1.1em;
+	color: $foreground;
+	margin-top: -5px;
+}
+
+.btn_prev,
+.btn_play,
+.btn_next {
+	font-family: "tabler-icons";
+	color: $foreground;
+	font-size: 2.4em;
+}
+
+.metric-player scale trough highlight {
+	all: unset;
+	border-radius: 10px;
+	background-color: $foreground;
+}
+
+.metric-player scale trough {
+	all: unset;
+	background-color: $background;
+	border: 2px solid $foreground;
+	border-radius: 50px;
+}
+
+.metric-player scale trough {
+	min-width: 200px;
+	min-height: 10px;
+	// margin: .5rem 1rem 0 1rem;
+}
 
 
 // /** Generic window ***********************************/

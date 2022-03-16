@@ -12,18 +12,9 @@ get_camera_status() {
     camera_status=$(lsusb | grep -c Webcam)
 }
 
-function output() {
-    get_camera_status
-    if [ "${camera_status}" -eq 1 ]; then
-        echo "%{F$icon_active_foreground}$icon_active%{F-}"
-	else
-		echo "%{F$icon_inactive_foreground}$icon_inactive%{F-}"
-	fi
-}
-
-case "$1" in
-    *)
-        # By default print output for bar
-        output
-        ;;
-esac
+get_camera_status
+if [ "${camera_status}" -eq 1 ]; then
+    echo "%{F$icon_active_foreground}$icon_active%{F-}"
+else
+    echo "%{F$icon_inactive_foreground}$icon_inactive%{F-}"
+fi

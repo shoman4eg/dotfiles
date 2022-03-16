@@ -16,7 +16,7 @@ hidden_bg=
 hidden_underline=
 
 char_limit=10
-class_char_limit=
+class_char_limit=10
 
 active_left="%{F$active_text_color}"
 active_right="%{F-}"
@@ -28,6 +28,7 @@ separator="  "
 separator="%{F$inactive_text_color}$separator%{F-}"
 
 char_case="normal" # normal, upper, lower
+
 
 declare -A program_icons=(
 	[CODE]=' VS Code'
@@ -61,6 +62,7 @@ format_underline() {
 wm_class() {
 	echo $(xprop WM_CLASS -id $1 | awk '{print $4}' | sed -e 's/^"//' -e 's/"$//')
 }
+
 wm_title() {
 	echo $(xtitle $1)
 }
@@ -78,38 +80,44 @@ truncate() {
 	fi
 }
 
-is_hidden_wid() {
-	if xprop -id "$1" | grep -q "window state: Normal"
-	then
-		return 1
-	else
-		return 0
-	fi
+get_hidden_wid() {
+	echo $(bspc query -N -n .hidden)
+}
+
+get_focused_wid() {
+	return $(bspc query -N -n .focused --desktop $MONITOR:focused)
+}
+
+get_active_wid() {
+	echo $(bspc query -N -n)
 }
 
 raise_or_minimize() {
-	if [ "$(get_active_wid)" = "$1" ]; then
-		wmctrl -ir "$1" -b toggle,hidden
+	if get_active_wid | grep -q "$1"; then
+		bspc node -g hidden=on
 	else
-		wmctrl -ia "$1"
-		wmctrl -ir "$1" -b remove,hidden; wmctrl -ia "$1"
-		# wmctrl -ia "$1"
+		if get_hidden_wid | grep -q "$w"; then
+			bspc node "$1" -g hidden=off
+		fi
+		bspc node -f "$1"
 	fi
-	retile_after_hide "$1"
+}
+
+floating() {
+	bspc node "$1" -t \~floating
 }
 
 close() {
-	bspc node -c "$1"
+	bspc node "$1" -c
 }
 
 add_action() {
 	w_name=""
 	window_count=0
-	windows=$(xtitle $(bspc query -N -n .window --desktop $MONITOR:focused))
-	id_windows=$(bspc query -N -n .window --desktop $MONITOR:focused)
-	focused=$(xtitle $(bspc query -N -n))
-	id_focused=$(bspc query -N -n)
-	win_id=$(wmctrl -lx | awk '{$2=$3=$4=" ";print}')
+	windows_ids=$(bspc query -N -n .window --desktop $MONITOR:focused)
+	focused_id=$(get_active_wid)
+	hidden_ids=$(get_hidden_wid)
+	on_click="$0"
 	while IFS="[ .\.]" read -r w; do
 		# w_name=$(wm_title $w)
 
@@ -119,10 +127,6 @@ add_action() {
 
 		w_class=$(wm_class $w)
 		node_flags=$(node_flags $w)
-
-		if [ "${#w_class}" -gt "$class_char_limit" ]; then
-			w_class="$(echo "$w_class" | cut -c1-$((class_char_limit-1)))"
-		fi
 
 		find_class=$(echo "$w_class" | tr '[:lower:]' '[:upper:]')
 
@@ -134,19 +138,19 @@ add_action() {
 
 		# Use user-selected character case
 		case "$char_case" in
-			"lower") w_name=$(
-				echo "$w_name" | tr '[:upper:]' '[:lower:]'
-				) ;;
-			"upper") w_name=$(
-				echo "$w_name" | tr '[:lower:]' '[:upper:]'
-				) ;;
+		"lower") w_name=$(
+			echo "$w_name" | tr '[:upper:]' '[:lower:]'
+		) ;;
+		"upper") w_name=$(
+			echo "$w_name" | tr '[:lower:]' '[:upper:]'
+		) ;;
 		esac
 
-		w_name="${w_name} ${node_flags} "
+		w_name="${w_name}"
 
-		if [ "$w" = "$id_focused" ]; then
+		if [ "$w" = "$focused_id" ]; then
 			w_name="${active_left}${w_name}${active_right}"
-		elif ( is_hidden_wid "$w"); then
+		elif (echo "$hidden_ids" | grep -q "$w"); then
 			w_name="${hidden_left}${w_name}${hidden_right}"
 		else
 			w_name="${inactive_left}${w_name}${inactive_right}"
@@ -157,16 +161,18 @@ add_action() {
 			printf "%s" "$separator"
 		fi
 
-		printf "%s" "%{A1:$on_click bspc node -f $w:}"
+		printf "%s" "%{A1:$on_click raise_or_minimize $w:}"
 		printf "%s" "%{A2:$on_click close $w:}"
+		printf "%s" "%{A3:$on_click floating $w:}"
+
 		# Print the final window name
-
 		printf "%s" "$w_name"
-		printf "%s" "%{A}%{A}"
 
-		window_count=$(( window_count + 1 ))
+		printf "%s" "%{A}%{A}%{A}"
+
+		window_count=$((window_count + 1))
 	done <<-EOF
-		$id_windows
+		$windows_ids
 	EOF
 
 	if [ "$window_count" = 0 ]; then
@@ -175,4 +181,14 @@ add_action() {
 	echo ""
 }
 
-bspc subscribe node_add node_remove node_focus node_flag desktop_focus | while read; do add_action; done
+main() {
+	# If no argument passed...
+	if [ -z "$2" ]; then
+		bspc subscribe node_add node_remove node_focus node_flag desktop_focus | while read; do add_action; done
+	# If arguments are passed, run requested on-click function
+	else
+		"$@"
+	fi
+}
+
+main "$@"

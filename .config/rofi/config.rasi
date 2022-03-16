@@ -6,7 +6,7 @@ configuration {
 	auto-select: false;
 	display-run: " ";
 	display-drun: "";
-	display-window: "  ";
+	display-window: " ";
 	drun-display-format: "{icon} {name}";
 	font: "Inter 11";
 	modi: "window,run,drun";

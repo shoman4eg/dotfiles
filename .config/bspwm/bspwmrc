@@ -67,7 +67,7 @@ bspc rule -a "Slack"               desktop=^3 follow=on
 bspc rule -a "TelegramDesktop"     desktop=^3 follow=on
 bspc rule -a "discord"             desktop=^3 follow=on
 
-bspc config external_rules_command "$HOME/.local/bin/bspwm_external_rules"
+bspc config external_rules_command "$SCRIPTPATH/external_rules"
 
 wmname LG3D
 ### Non-bspwm specific settings
