@@ -1,7 +1,9 @@
-*.foreground:    #A9B1D6
-*.background:    #1A1B26
-*.cursorColor:   #A9B1D6
-*.highlightColor:#3A3F4B
+*.foreground:     #c0caf5
+*.foreground-alt: #a9b1d6
+*.background:     #1a1b26
+*.background-alt: #292e42
+*.cursorColor:    #A9B1D6
+*.highlightColor: #3b4252
 
 ! Normal      Bright
 ! --------    -------
@@ -15,26 +17,26 @@
 ! 7 White     15 White
 
 ! Black colours
-*.color0:        #1A1B26
-*.color8:        #4E5173
+*.color0:        #15161E
+*.color8:        #414868
 ! Red colours
-*.color1:        #F7768E
-*.color9:        #E06C75
-! Yellow colours
-*.color2:        #E0AF68
-*.color10:       #D19A66
+*.color1:        #f7768e
+*.color9:        #f7768e
 ! Green colours
-*.color3:        #9ECE6A
-*.color11:       #98C379
+*.color2:        #9ece6a
+*.color10:       #9ece6a
+! Yellow colours
+*.color3:        #e0af68
+*.color11:       #e0af68
 ! Blue colours
-*.color4:        #7AA2F7
-*.color12:       #61AFEF
+*.color4:        #7aa2f7
+*.color12:       #7aa2f7
 ! Magenta (pink, !green) colours
-*.color5:        #9A7ECC
-*.color13:       #C678DD
+*.color5:        #bb9af7
+*.color13:       #9d7cd8
 ! Cyan (blue + green)
-*.color6:        #4ABAAF
-*.color14:       #56B6C2
+*.color6:        #7dcfff
+*.color14:       #7dcfff
 ! White colours
-*.color7:        #ACB0D0
-*.color15:       #ABB2BF
+*.color7:        #a9b1d6
+*.color15:       #c0caf5

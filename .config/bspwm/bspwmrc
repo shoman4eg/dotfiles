@@ -12,11 +12,11 @@ pgrep -x sxhkd > /dev/null || sxhkd &
 
 ### Monitor
 for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-  bspc monitor $m -d 1 2 3 4 5 6
+	bspc monitor $m -d 1 2 3 4 5 6
 done
 
 xresource() {
-  xrdb -query | grep -E "^(bspwm|\*)\.$1" | sed -r "s/^[^:]+:\s+//" | tail -n 1
+	xrdb -query | grep -E "^(bspwm|\*)\.$1" | sed -r "s/^[^:]+:\s+//" | tail -n 1
 }
 
 ###Config

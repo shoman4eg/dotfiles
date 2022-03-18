@@ -1,15 +1,16 @@
 /* The default configuration incase none is specified */
 configuration {
-	width: 500;
+	font: "Inter 11";
 	show-icons: true;
+	width: 500;
 	terminal: "alacritty";
 	auto-select: false;
-	display-run: " ";
-	display-drun: "";
+	display-run: " ";
+	display-drun: " ";
 	display-window: " ";
 	drun-display-format: "{icon} {name}";
-	font: "Inter 11";
+	run-display-format: "{name}";
 	modi: "window,run,drun";
 	show-icons: true;
 }
-@theme "nord"
+@theme "theme"

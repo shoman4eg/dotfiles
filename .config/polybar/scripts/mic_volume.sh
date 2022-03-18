@@ -4,7 +4,7 @@
 source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g')
 
 icon=""
-icon_foreground="$cyan"
+icon_foreground=$cyan
 
 muted_icon=""
 muted_icon_foreground="$red"

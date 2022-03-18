@@ -16,20 +16,21 @@ super + Return
 super + d
 	rofi -show drun
 
+# command launcher
 super + r
 	rofi -show run
 
-# Screenshot
+# screenshot
 alt + shift + 2
 	flameshot gui
 
-# Toggle eww dashboard
+# toggle eww dashboard
 super + grave
-    sh $HOME/.local/bin/dashboard
+	sh $HOME/.local/bin/dashboard
 
-# Toggle notification center
+# toggle notification center
 super + p
-    sh $HOME/.local/bin/notificationcenter
+	sh $HOME/.local/bin/notificationcenter
 
 # switch windows
 super + Tab
@@ -42,18 +43,17 @@ super + shift + w
 super + shift + Escape
 	pkill -USR1 -x sxhkd
 
-# Open FM
+# open filemanager
 super + e
 	thunar
 
-# Lock screen
+# lockscreen
 super + l
 	betterlockscreen -l dim --display 1
 
-# Brightness
+# brightness
 XF86MonBrightnessUp
 	xbacklight -inc 10
-
 XF86MonBrightnessDown
 	xbacklight -dec 10
 
@@ -101,14 +101,15 @@ super + g
 # state/flags
 #
 
-# set the window state
+# set the window state: tiled, pseudo_tiled, floating
 super + {t,shift + t,s}
 	bspc node -t {tiled,pseudo_tiled,floating}
 
+# toggle window fullscreen
 super + f
 	bspc node -t \~fullscreen
 
-# set the node flags
+# set the node flags: m-marked, x-locked, y-sticky, z-private
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
@@ -132,14 +133,9 @@ super + {_,shift + }c
 super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
-# focus the last node/desktop
-# super + grave
-# 	bspc node -f last
-
 # AltTab
 alt + {_,shift + }Tab
 	bspc node -f {next,prev}.local
-
 
 # focus the older or newer node in the focus history
 # super + {o,i}

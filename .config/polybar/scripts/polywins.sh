@@ -3,13 +3,13 @@
 # Colors
 source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g')
 
-active_text_color="$cyan"
+active_text_color="$foreground"
 active_bg="$background_alt"
 
 inactive_text_color="$foreground"
 inactive_bg=
 
-hidden_text_color="#4c566a"
+hidden_text_color="$foreground_darker"
 hidden_bg=
 
 char_limit=10

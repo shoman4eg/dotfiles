@@ -1,43 +1,96 @@
+/* The shared configuration, which can be overridden in configuration files */
+
+/* Import the color scheme */
 * {
-	polar-1: #2E3440;
-	polar-2: #3B4252;
-	polar-3: #434C5E;
-	polar-4: #4C566A;
+	background: #1a1b26;
+	background-alt: #292e42;
+	background-darker: #3b4261;
 
-	snow-1: #D8DEE9;
-	snow-2: #E5E9F0;
-	snow-3: #ECEFF4;
+	foreground: #c0caf5;
+	foreground-alt: #a9b1d6;
+	foreground-darker: #4c566a;
 
-	frost-1: #8FBCBB;
-	frost-2: #88C0D0;
-	frost-3: #81A1C1;
-	frost-4: #5E81AC;
+	blue: #7aa2f7;
+	cyan: #7dcfff;
+	green: #9ece6a;
+	red: #f7768e;
+	yellow: #e0af68;
+	orange: #ff9e64;
+	magenta: #bb9af7;
+	teal: #1abc9c;
+	purple: #9d7cd8;
 
-	aurora-1: #BF616A;
-	aurora-2: #D08770;
-	aurora-3: #EBCB8B;
-	aurora-4: #A3BE8C;
-	aurora-5: #B48EAD;
-
-	/* ; Nord colourful */
-	grad-1: #bfc3cb;
-	grad-2: #BF616A;
-	grad-3: #D08770;
-	grad-4: #EBCB8B;
-	grad-5: #A3BE8C;
-	grad-6: #8ca0be;
-	grad-7: #B48EAD;
-	grad-8: #4C566A;
-
-	transparent: #002E3440;
-	background: #0c121a;
-	foreground: #ECEFF4;
-	foreground-alt: #ECEFF4;
+	black: #1a1b26;
+	white: #a9b1d6;
 
 	border: 0;
 	margin: 0;
 	padding: 0;
 	spacing: 0;
-	background-color: @polar-1;
-	text-color: @frost-3;
+	background-color: @background;
+	text-color: @foreground;
+}
+
+window {
+	border: 1px;
+	width: 600px;
+	border-color: @background-darker;
+}
+
+/** The search bar **/
+inputbar {
+	border: 0 0 1px 0;
+	font: "Inter 14";
+	border-color: @background-darker;
+	children: [prompt, entry];
+}
+
+/* Text search bar */
+entry {
+	padding: 16px;
+	text-color: @foreground;
+	font: "Inter 14";
+}
+
+/* The area to the left of the text search box */
+prompt {
+	enabled: true;
+	font: "tabler-icons 18";
+	padding: 12 4 4 12;
+	text-color: @foreground-darker;
+}
+
+listview {
+	cycle: false;
+	lines: 10;
+	scrollbar: false;
+}
+
+#scrollbar {
+	handle-color: @foreground-darker;
+	handle-width: 10px;
+}
+
+element {
+	font: "  20";
+	border: 0 0 1px 0;
+	padding: 12px;
+	spacing: 10px;
+}
+
+element selected {
+	text-color: @foreground;
+	background-color: @background-alt;
+}
+
+element-icon selected {
+	background-color: @background-alt;
+}
+element-text selected {
+	background-color: @background-alt;
+}
+
+element-icon {
+	size: 24px;
+	padding: 0 8px 0 0;
 }

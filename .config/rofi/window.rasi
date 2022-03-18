@@ -1,41 +1,49 @@
 configuration {
 	font: "Inter 11";
 	show-icons: true;
-	icon-theme: "Papirus";
-	disable-history: false;
+	disable-history: true;
 	fullscreen: false;
 	hide-scrollbar: true;
 	dynamic: true;
-	yoffset: -100;
 	kb-accept-entry: "!Super-Tab,Return";
-  	kb-row-down: "Super-Tab,Down";
+	kb-row-down: "Super-Tab,Down";
 	kb-row-up: "Super-Shift-Tab,Up";
-  	kb-cancel: "Escape";
+	kb-cancel: "Escape";
 	window-thumbnail: true;
 }
 
-@import "nord.rasi"
+@import "theme"
 
 inputbar {
 	enabled: false;
 }
 
 listview {
-	cycle: true;
-	columns:                        1;
-	// lines:							5;
-	dynamic:                        true;
-    layout:                         vertical;
+    background-color: @background;
+    columns:          4;
+    lines:            4;
+    cycle:            true;
+    dynamic:          true;
+    layout:           vertical;
 }
 
 window {
-    // transparency:                   "real";
-	width:							20%;
+    transparency:     "real";
+}
+
+
+entry {
+    background-color: @background;
+}
+
+mainbox {
+    background-color: @background;
+    children:         [ listview ];
+}
+element {
+    orientation:      vertical;
 }
 
 element-icon {
-    text-color:       				inherit;
-    // horizontal-align:               0.5;
-    // vertical-align:                 0.5;
-    // size:                           40px;
+    size:             80px;
 }
