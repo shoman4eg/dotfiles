@@ -19,6 +19,9 @@ super + d
 # command launcher
 super + r
 	rofi -show run
+# command calculate
+super + c
+	rofi -show calc -modi calc -no-show-match -no-sort
 
 # screenshot
 alt + shift + 2
@@ -42,6 +45,7 @@ super + shift + w
 # make sxhkd reload its configuration files:
 super + shift + Escape
 	pkill -USR1 -x sxhkd
+	notify-send 'sxhkd' 'Reloaded config'
 
 # open filemanager
 super + e
@@ -53,17 +57,17 @@ super + l
 
 # brightness
 XF86MonBrightnessUp
-	xbacklight -inc 10
+	~/.local/bin/brightness up 5
 XF86MonBrightnessDown
-	xbacklight -dec 10
+	~/.local/bin/brightness down 5
 
 # Volume
 XF86AudioRaiseVolume
-	~/.local/bin/volumecontrol -n up 5
+	~/.local/bin/volume up 5
 XF86AudioLowerVolume
-	~/.local/bin/volumecontrol -n down 5
+	~/.local/bin/volume down 5
 XF86AudioMute
-	~/.local/bin/volumecontrol -n mute
+	~/.local/bin/volume mute
 XF86AudioMicMute
 	~/.local/bin/togglemic
 

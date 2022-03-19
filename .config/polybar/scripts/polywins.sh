@@ -3,31 +3,44 @@
 # Colors
 source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g')
 
-active_text_color="$foreground"
-active_bg="$background_alt"
+active_foreground="$foreground"
+active_background="$background_alt"
 
-inactive_text_color="$foreground"
-inactive_bg=
+inactive_foreground="$foreground"
+inactive_background=
 
-hidden_text_color="$foreground_darker"
-hidden_bg=
+hidden_foreground="$foreground_darker"
+hidden_background=
 
 char_limit=10
 class_char_limit=10
 
-active_left="%{F$active_text_color}"
+active_left="%{F$active_foreground}"
 active_right="%{F-}"
-inactive_left="%{F$inactive_text_color}"
+inactive_left="%{F$inactive_foreground}"
 inactive_right="%{F-}"
-hidden_left="%{F$hidden_text_color}"
+hidden_left="%{F$hidden_foreground}"
 hidden_right="%{F-}"
-separator="  "
-separator="%{F$inactive_text_color}$separator%{F-}"
-
+separator="${module.polywins_main.separator}"
+separator="%{F$inactive_foreground}$separator%{F-}"
 char_case="normal" # normal, upper, lower
 
-
 declare -A program_icons=(
+	[CODE]=''
+	[ALACRITTY]=''
+	[TELEGRAMDESKTOP]=''
+	[SLACK]=''
+	[FIREFOXDEVELOPEREDITION]=''
+	[FIREFOX]=''
+	[JETBRAINS-PHPSTORM]=''
+	[GOOGLE-CHROME]=''
+	[IWGTK]=''
+	[DISCORD]=''
+	[THUNAR]=''
+	[LXAPPEARANCE]=''
+)
+
+declare -A program_text_icons=(
 	[CODE]=' VS Code'
 	[ALACRITTY]=' Terminal'
 	[TELEGRAMDESKTOP]=' Telegram'
@@ -42,16 +55,15 @@ declare -A program_icons=(
 	[LXAPPEARANCE]=' Look & feel'
 )
 
-if [ -n "$active_bg" ]; then
-	active_left="${active_left}%{B$active_bg}"
+if [ -n "$active_background" ]; then
+	active_left="${active_left}%{B$active_background}"
 	active_right="%{B-}${active_right}"
 fi
 
-if [ -n "$inactive_bg" ]; then
-	inactive_left="${inactive_left}%{B$inactive_bg}"
+if [ -n "$inactive_background" ]; then
+	inactive_left="${inactive_left}%{B$inactive_background}"
 	inactive_right="%{B-}${inactive_right}"
 fi
-
 
 wm_class() {
 	echo $(bspc query -T -n $1 | jq .client.className | sed -e 's/^"//' -e 's/"$//')

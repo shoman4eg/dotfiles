@@ -1,0 +1,107 @@
+#!/bin/bash
+
+declare -a ICONS=(
+  audio-volume-muted
+  audio-volume-low
+  audio-volume-medium
+  audio-volume-high
+)
+
+function get_volume {
+  pactl get-sink-volume @DEFAULT_SINK@ | awk '{gsub("%,?", ""); print $5; exit}'
+}
+
+function is_muted {
+  pactl get-sink-mute @DEFAULT_SINK@ | grep yes
+}
+
+increase_volume() {
+  local step=${1:-5}
+
+  pactl set-sink-mute @DEFAULT_SINK@ false >/dev/null
+  pactl set-sink-volume @DEFAULT_SINK@ +"$step"% >/dev/null
+}
+
+decrease_volume() {
+  local step=${1:-5}
+
+  pactl set-sink-mute @DEFAULT_SINK@ false >/dev/null
+  pactl set-sink-volume @DEFAULT_SINK@ -"$step"% >/dev/null
+}
+set_volume() {
+  local -r vol=${1:?$(error 'Volume is required')}
+
+  pactl set-sink-mute @DEFAULT_SINK@ false >/dev/null
+  pactl set-sink-volume @DEFAULT_SINK@ ${vol%.*}% >/dev/null
+}
+
+toggle_mute() {
+  pactl set-sink-mute @DEFAULT_SINK@ toggle >/dev/null
+}
+
+function send_notification {
+  volume=$(get_volume)
+  local -a hints=(
+    int:value:"$volume"
+  )
+
+  if [ "$volume" = "0" ]; then
+    icon_name=${ICONS[0]}
+  elif [ "$volume" -lt "30" ]; then
+    icon_name=${ICONS[1]}
+  elif [ "$volume" -lt "70" ]; then
+    icon_name=${ICONS[2]}
+  elif [ "$volume" -gt "100" ]; then
+    icon_name=${ICONS[3]}
+    hints+=(string:fgcolor:"#f7768e")
+  else
+    icon_name=${ICONS[3]}
+  fi
+
+  if is_muted; then
+    text="Volume muted"
+    icon_name=${ICONS[0]}
+    unset -v 'hints[1]'
+    hints+=(string:fgcolor:"#e0af68")
+    hints+=(string:hlcolor:"#f7768e")
+  else
+    printf -v text "Volume %3s%%" "$volume"
+  fi
+
+  read -ra hints <<<"${hints[@]/#/-h }"
+  dunstify "$text" -r 5555 -i $icon_name -u normal "${hints[@]}"
+}
+
+usage() {
+  printf "%s\n" "Usage: $0 [OPTIONS...]"
+  printf "\n%s\n" "OPTIONS:"
+  printf "  %-14s%s\n" "up STEP" "increase volume by STEP% (default: 5)"
+  printf "  %-14s%s\n" "down STEP" "decrease volume by STEP% (default: 5)"
+  printf "  %-14s%s\n" "mute" "mute volume"
+  printf "  %-14s%s\n" "status" "get volume"
+  printf "  %-14s%s\n" "set VALUE" "set volume value"
+  printf "  %-14s%s\n" "help" "show this help"
+}
+
+case $1 in
+up)
+  increase_volume $2
+  send_notification
+  ;;
+down)
+  decrease_volume $2
+  send_notification
+  ;;
+mute)
+  toggle_mute
+  send_notification
+  ;;
+status)
+  echo $(get_volume)
+  ;;
+set)
+  set_volume $2
+  send_notification
+  ;;
+*) usage ;;
+esac

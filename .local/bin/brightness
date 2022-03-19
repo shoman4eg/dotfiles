@@ -1,0 +1,72 @@
+#!/bin/bash
+
+function get_brightness {
+  xbacklight -get
+}
+
+max() {
+  echo $(( $1 > $2 ? $1 : $2 ))
+}
+
+increase_brightness() {
+  local step=${1:-5}
+
+  xbacklight -inc $step >/dev/null
+}
+
+decrease_brightness() {
+  local step=${1:-5}
+
+  local -r bri=$(get_brightness)
+
+  if (( bri - step < 1 )); then
+      # Instead of doing nothing, step to max_volume
+      step=$( max "0" "$(( bri - 1 ))" )
+  fi
+  xbacklight -dec $step >/dev/null
+}
+set_brightness() {
+  local -r bri=${1:?$(error 'Brightness is required')}
+
+  xbacklight -set $bri>/dev/null
+}
+
+function send_notification {
+  brightness=$(get_brightness)
+  local -a hints=(
+    int:value:"$brightness"
+  )
+  icon_name="notification-display-brightness"
+
+  read -ra hints <<<"${hints[@]/#/-h }"
+  dunstify "Brightness: $brightness" -r 5554 -i $icon_name -u normal "${hints[@]}"
+}
+
+usage() {
+  printf "%s\n" "Usage: $0 [OPTIONS...]"
+  printf "\n%s\n" "OPTIONS:"
+  printf "  %-14s%s\n" "up STEP" "increase brightness by STEP% (default: 5)"
+  printf "  %-14s%s\n" "down STEP" "decrease brightness by STEP% (default: 5)"
+  printf "  %-14s%s\n" "status" "get brightness"
+  printf "  %-14s%s\n" "set VALUE" "set brightness value"
+  printf "  %-14s%s\n" "help" "show this help"
+}
+
+case $1 in
+up)
+  increase_brightness $2
+  send_notification
+  ;;
+down)
+  decrease_brightness $2
+  send_notification
+  ;;
+status)
+  echo $(get_brightness)
+  ;;
+set)
+  set_brightness $2
+  send_notification
+  ;;
+*) usage ;;
+esac
