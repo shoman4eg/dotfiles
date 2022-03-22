@@ -3,10 +3,10 @@
 # Colors
 source <(grep = $HOME/.config/polybar/colors.ini | sed 's/ *= */=/g' | sed 's/-/_/g')
 
-active_foreground="$foreground"
+active_foreground=
 active_background="$background_alt"
 
-inactive_foreground="$foreground"
+inactive_foreground=
 inactive_background=
 
 hidden_foreground="$foreground_darker"
@@ -25,24 +25,25 @@ separator=" "
 separator="%{F$inactive_foreground}$separator%{F-}"
 char_case="normal" # normal, upper, lower
 
-w_icon() {
+w_add_icon() {
 	shopt -s nocasematch
-	case "$1" in
-		code) icon='';;
-		alacritty) icon='';;
-		telegramdesktop) icon='';;
-		slack) icon='';;
-		firefoxdeveloperedition) icon='';;
-		firefox) icon='';;
-		jetbrains-phpstorm) icon='';;
-		google-chrome) icon='';;
-		iwgtk) icon='';;
-		discord) icon='';;
-		thunar) icon='';;
-		lxappearance) icon='';;
-		*) icon='';;
+	w_class="$1"
+	case "$w_class" in
+		code) w_name="" w_class='VS Code';;
+		alacritty) w_name="";;
+		telegramdesktop) w_name=""; w_class='Telegram';;
+		slack) w_name="";;
+		firefoxdeveloperedition) w_name=""; w_class='Firefox';;
+		firefox) w_name="";;
+		jetbrains-phpstorm) w_name=""; w_class='phpStorm';;
+		google-chrome) w_name="";;
+		iwgtk) w_name="";;
+		discord) w_name="";;
+		thunar) w_name="";;
+		lxappearance) w_name="";;
+		*) w_name="";;
 	esac
-	echo $icon
+	echo "$w_name $w_class"
 }
 
 if [ -n "$active_background" ]; then
@@ -115,7 +116,7 @@ add_action() {
 			continue
 		fi
 		w_class=$(wm_class $w)
-		w_name="$(w_icon $w_class) $w_class"
+		w_name=$(w_add_icon $w_class)
 
 
 		# Use user-selected character case

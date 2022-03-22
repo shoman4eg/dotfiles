@@ -11,10 +11,7 @@ killall polybar
 while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
 # Launch polybar
-export MONITOR="eDP1"
-polybar main -c $(dirname $0)/config.ini &
-
-for monitor in $(polybar --list-all-monitors | awk '{print substr($1, 1, length($1)-1)}' | grep -v ^eDP1); do
+for monitor in $(xrandr --query | grep " connected" | awk '{print $1}'); do
   export MONITOR="$monitor"
-  polybar main_external -c $(dirname $0)/config.ini &
+  polybar "main_$monitor" -c $(dirname $0)/config.ini &
 done
