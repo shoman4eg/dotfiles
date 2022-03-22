@@ -21,39 +21,29 @@ inactive_left="%{F$inactive_foreground}"
 inactive_right="%{F-}"
 hidden_left="%{F$hidden_foreground}"
 hidden_right="%{F-}"
-separator="${module.polywins_main.separator}"
+separator=" "
 separator="%{F$inactive_foreground}$separator%{F-}"
 char_case="normal" # normal, upper, lower
 
-declare -A program_icons=(
-	[CODE]=''
-	[ALACRITTY]=''
-	[TELEGRAMDESKTOP]=''
-	[SLACK]=''
-	[FIREFOXDEVELOPEREDITION]=''
-	[FIREFOX]=''
-	[JETBRAINS-PHPSTORM]=''
-	[GOOGLE-CHROME]=''
-	[IWGTK]=''
-	[DISCORD]=''
-	[THUNAR]=''
-	[LXAPPEARANCE]=''
-)
-
-declare -A program_text_icons=(
-	[CODE]=' VS Code'
-	[ALACRITTY]=' Terminal'
-	[TELEGRAMDESKTOP]=' Telegram'
-	[SLACK]=' Slack'
-	[FIREFOXDEVELOPEREDITION]=' Firefox'
-	[FIREFOX]=' Firefox'
-	[JETBRAINS-PHPSTORM]=' phpStorm'
-	[GOOGLE-CHROME]=' Google Chrome'
-	[IWGTK]=' Wifi settings'
-	[DISCORD]=' Discord'
-	[THUNAR]=' Thunar'
-	[LXAPPEARANCE]=' Look & feel'
-)
+w_icon() {
+	shopt -s nocasematch
+	case "$1" in
+		code) icon='';;
+		alacritty) icon='';;
+		telegramdesktop) icon='';;
+		slack) icon='';;
+		firefoxdeveloperedition) icon='';;
+		firefox) icon='';;
+		jetbrains-phpstorm) icon='';;
+		google-chrome) icon='';;
+		iwgtk) icon='';;
+		discord) icon='';;
+		thunar) icon='';;
+		lxappearance) icon='';;
+		*) icon='';;
+	esac
+	echo $icon
+}
 
 if [ -n "$active_background" ]; then
 	active_left="${active_left}%{B$active_background}"
@@ -125,16 +115,8 @@ add_action() {
 			continue
 		fi
 		w_class=$(wm_class $w)
-		node_flags=$(node_flags $w)
+		w_name="$(w_icon $w_class) $w_class"
 
-		find_class=$(echo "$w_class" | tr '[:lower:]' '[:upper:]')
-
-		# Find name with icon
-		if [ "${program_icons[$find_class]+_}" ]; then
-			w_name=" ${program_icons[$find_class]} "
-		else
-			w_name=" $w_class "
-		fi
 
 		# Use user-selected character case
 		case "$char_case" in
@@ -147,11 +129,11 @@ add_action() {
 		esac
 
 		if [ "$w" = "$focused_id" ]; then
-			w_name="${active_left}${w_name}${active_right}"
+			w_name="${active_left} ${w_name} ${active_right}"
 		elif (echo "$hidden_ids" | grep -q "$w"); then
-			w_name="${hidden_left}${w_name}${hidden_right}"
+			w_name="${hidden_left} ${w_name} ${hidden_right}"
 		else
-			w_name="${inactive_left}${w_name}${inactive_right}"
+			w_name="${inactive_left} ${w_name} ${inactive_right}"
 		fi
 
 		# Add separator unless the window is first in list

@@ -14,18 +14,18 @@
 # uncomment your music players below.
 #
 
-# Control="MPD"
-Control=$(playerctl --list-all | grep firefox)
-# [ -n "$(pgrep spotify)" ] && Control="spotify"
-# [ -n "$(pgrep rhythmbox)" ] && Control="rhythmbox"
-# [ -n "$(pgrep audacious)" ] && Control="audacious"
-# [ -n "$(pgrep clementine)" ] && Control="clementine"
-# [ -n "$(pgrep strawberry)" ] && Control="strawberry"
+# control="MPD"
+control=$(playerctl --list-all | grep firefox)
+# [ -n "$(pgrep spotify)" ] && control="spotify"
+# [ -n "$(pgrep rhythmbox)" ] && control="rhythmbox"
+# [ -n "$(pgrep audacious)" ] && control="audacious"
+# [ -n "$(pgrep clementine)" ] && control="clementine"
+# [ -n "$(pgrep strawberry)" ] && control="strawberry"
 
 # saves covers here
-Cover=/tmp/cover.png
+cover=/tmp/cover.png
 # if cover not found in metadata use this instead
-bkpCover=~/.config/eww/dashboard/assets/fallback.png
+bkpcover=~/.config/eww/dashboard/assets/fallback.png
 # mpd music directory
 mpddir=~/Music
 
@@ -35,65 +35,65 @@ mpddir=~/Music
 
 ########################## Title ##########################
 title() {
-	title=$(playerctl --player=$Control metadata --format {{title}})
+	title=$(playerctl --player=$control metadata --format {{title}})
 	[ -z "$title" ] && title="Nothing Playing"
 	echo "$title"
 }
 
 ########################## Artist ##########################
 artist() {
-	artist=$(playerctl --player=$Control metadata --format {{artist}})
+	artist=$(playerctl --player=$control metadata --format {{artist}})
 	[ -z "$artist" ] && artist="Offline"
 	echo "$artist"
 }
 
 ########################## Album ##########################
 album() {
-	album=$(playerctl --player=$Control metadata --format {{album}})
+	album=$(playerctl --player=$control metadata --format {{album}})
 	[ -z "$album" ] && album="Album"
 	echo "$album"
 }
 
 ########################## Status ##########################
 status() {
-	status=$(playerctl --player=$Control status)
+	status=$(playerctl --player=$control status)
 	[ -z "$status" ] && status="Stopped"
 	echo "$status"
 }
 
 ########################## Time ##########################
 ctime() {
-	time=$(playerctl --player=$Control position --format "{{ duration(position) }}")
+	time=$(playerctl --player=$control position --format "{{ duration(position) }}")
 	[ -z "$time" ] && time="0:00"
 	echo "$time"
 }
 
 ########################## Length ##########################
 length() {
-	length=$(playerctl --player=$Control metadata --format "{{ duration(mpris:length) }}")
+	length=$(playerctl --player=$control metadata --format "{{ duration(mpris:length) }}")
 	[ -z "$length" ] && length="0:00"
 	echo "$length"
 }
 
 ########################## trackNumber ##########################
 playlist() {
-	playlist=$(playerctl --player=$Control metadata xesam:trackNumber)
+	playlist=$(playerctl --player=$control metadata xesam:trackNumber)
 	[ -z "$playlist" ] && playlist="0"
 	echo "$playlist"
 }
 
-########################## Cover ##########################
+########################## cover ##########################
 cover() {
-	albumart="$(playerctl --player=$Control metadata mpris:artUrl | sed -e 's/open.spotify.com/i.scdn.co/g')"
-	[ $(playerctl --player=$Control metadata mpris:artUrl) ] && curl -s "$albumart" --output $Cover || cp $bkpCover $Cover
-	echo "$Cover"
+	albumart="$(playerctl --player=$control metadata mpris:artUrl | sed -e 's/open.spotify.com/i.scdn.co/g')"
+	[ $(playerctl --player=$control metadata mpris:artUrl) ] && curl -s "$albumart" --output $cover || cp $bkpcover $cover
+	echo "$cover"
 }
 
 ########################## Statusicon ##########################
 statusicon() {
 	icon=""
-	[ $(playerctl --player=$Control status) = "Playing" ] && icon=""
-	[ $(playerctl --player=$Control status) = "Paused" ] && icon=""
+	[ $(playerctl --player=$control status) = "Playing" ] && icon=""
+	[ $(playerctl --player=$control status) = "Paused" ] && icon=""
 	echo "$icon"
 }
 
@@ -113,8 +113,8 @@ tailstatusicon() {
 
 ########################## Lyrics ##########################
 lyrics() {
-	Title=$(playerctl --player=$Control metadata --format {{title}})
-	Artist=$(playerctl --player=$Control metadata --format {{artist}})
+	Title=$(playerctl --player=$control metadata --format {{title}})
+	Artist=$(playerctl --player=$control metadata --format {{artist}})
 	URL="https://api.lyrics.ovh/v1/$Artist/$Title"
 	lyrics=$(curl -s "$(echo "$URL" | sed s/" "/%20/g | sed s/"&"/%26/g | sed s/,/%2C/g | sed s/-/%2D/g)" | jq '.lyrics')
 	[ "$lyrics" = "null" ] && lyrics=$(curl -s --get "https://makeitpersonal.co/lyrics" --data-urlencode "artist=$Artist" --data-urlencode "title=$Title")
@@ -146,10 +146,10 @@ mpcalbum() {
 	echo "$album"
 }
 
-########################## Cover ##########################
+########################## cover ##########################
 mpccover() {
-	ffmpeg -i "$mpddir"/"$(mpc current -f %file%)" "${Cover}" -y || cp $bkpCover $Cover
-	echo "$Cover" && exit
+	ffmpeg -i "$mpddir"/"$(mpc current -f %file%)" "${cover}" -y || cp $bkpcover $cover
+	echo "$cover" && exit
 }
 
 ########################## Time ##########################
@@ -242,16 +242,16 @@ doc() {
 # └─┘┴   ┴ ┴└─┘┘└┘└─┘
 
 case $1 in
-	next) playerctl --player=$Control next ;;
-	previous) playerctl --player=$Control previous ;;
-	toggle) playerctl --player=$Control play-pause ;;
+	next) playerctl --player=$control next ;;
+	previous) playerctl --player=$control previous ;;
+	toggle) playerctl --player=$control play-pause ;;
 	title) title ;;
 	artist) artist ;;
 	album) album ;;
 	status) status ;;
 	statusicon) statusicon ;;
 	tailstatusicon) tailstatusicon ;;
-	player) echo "$Control" ;;
+	player) echo "$control" ;;
 	coverloc) cover ;;
 	showcover) cover | xargs feh ;;
 	time) ctime ;;
