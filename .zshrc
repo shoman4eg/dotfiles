@@ -7,12 +7,6 @@ export ZSH="/home/askew/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="oxide"
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
 # Uncomment the following line to use case-sensitive completion.
 CASE_SENSITIVE="true"
 
@@ -77,23 +71,11 @@ source $ZSH/oh-my-zsh.sh
 echo -e -n "\x1b[\x34 q"
 
 # User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='nvim'
 else
   export EDITOR='code'
 fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
 
 export BROWSER='/usr/bin/firefox-developer-edition'
 export PATH=/home/askew/.local/bin:/home/askew/.go/bin:$PATH
@@ -101,19 +83,17 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export TERM=tmux-256color
 export TERMINAL=alacritty
 export GOPATH=$HOME/.go
+export PAGER='most'
 
 unalias duf
 
-export PAGER='most'
 typeset -A hash
+source "${XDG_CONFIG_HOME}/zshconfig/environments.zsh"
 source "${XDG_CONFIG_HOME}/zshconfig/history.zsh"
 source "${XDG_CONFIG_HOME}/zshconfig/alias.zsh"
 source "${XDG_CONFIG_HOME}/zshconfig/functions.zsh"
 source "${XDG_CONFIG_HOME}/zshconfig/docker.zsh"
 
-# if [ -x "$(command -v keychain)" ]; then
-    # eval "$(keychain --eval --quiet id_rsa)"
-# fi
 eval $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)
 export SSH_AUTH_SOCK
 export GPG_AGENT_INFO
@@ -121,7 +101,7 @@ export GNOME_KEYRING_CONTROL
 export GNOME_KEYRING_PID
 
 if [ -x "$(command -v dircolors)" ]; then
-    eval "$(dircolors -b ~/.config/dircolors)"
+  eval "$(dircolors -b ~/.config/dircolors)"
 fi
 
 dump_file="$HOME/.cache/zsh/zcompdump"
@@ -134,8 +114,3 @@ fi
 unset dump_file
 
 source /home/askew/.config/broot/launcher/bash/br
-
-# BEGIN SNIPPET: Platform.sh CLI configuration
-HOME=${HOME:-'/home/askew'}
-export PATH="$HOME/"'.platformsh/bin':"$PATH"
-if [ -f "$HOME/"'.platformsh/shell-config.rc' ]; then . "$HOME/"'.platformsh/shell-config.rc'; fi # END SNIPPET

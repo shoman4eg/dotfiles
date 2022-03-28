@@ -43,7 +43,7 @@ w_add_icon() {
 		lxappearance) w_name="";;
 		*) w_name="";;
 	esac
-	echo "$w_name $w_class"
+	echo "$w_name"
 }
 
 if [ -n "$active_background" ]; then
@@ -116,7 +116,7 @@ add_action() {
 			continue
 		fi
 		w_class=$(wm_class $w)
-		w_name=$(w_add_icon $w_class)
+		w_name="$(w_add_icon $w_class) $(xtitle -t 15 $w)"
 
 
 		# Use user-selected character case

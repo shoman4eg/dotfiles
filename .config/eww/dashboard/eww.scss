@@ -12,6 +12,7 @@ $white: #a9b1d6;
 $white-alt: #c0caf5;
 $black: #15161e;
 $black-alt: #414868;
+$icons-font: "tabler-icons";
 
 
 // Global
@@ -19,155 +20,149 @@ $black-alt: #414868;
 	all: unset;
 }
 
-.genwin {
-	background-color: $background;
-	color: $foreground;
-	border-radius: .3rem;
-}
-
 .sidebar {
 	background-color: $background;
 }
 
 // Clock
-.time {
-	margin-top: 2rem;
-}
-
 .clock {
-	padding: 2rem 4.2rem 2rem 4.2rem;
 	background-color: $background;
 	color: $foreground;
 	border-radius: .3rem;
 	margin-top: 2rem;
-}
 
-.hour,
-.min,
-.separator-clock {
-	font-family: Iosevka;
-	font-weight: bold;
-	font-size: 4em;
-	margin-left: .8rem;
-}
+	&__hour,
+	&__min,
+	&__separator {
+		font-family: Iosevka;
+		font-weight: bold;
+		font-size: 4em;
+		margin-left: .8rem;
+	}
 
-.separator-clock {
-	margin-top: -.5rem;
-}
+	&__separator {
+		margin-top: -.5rem;
+	}
 
-.day {
-	font-family: Inter;
-	font-style: italic;
-	font-size: 1em;
+	&__day {
+		font-family: Inter;
+		font-style: italic;
+		font-size: 1em;
+	}
 }
 
 // System
-.cpu_icon,
-.mem_icon,
-.bri_icon,
-.vol_icon {
-	font-family: "tabler-icons";
-	font-size: 1.5rem;
-	font-weight: normal;
-}
+.systembar {
+	$self: &;
+	background-color: $background;
+	color: $foreground;
+	border-radius: .3rem;
 
-.cpu_icon {
-	color: $blue;
-}
-
-.mem_icon {
-	color: $magenta;
-}
-
-.bri_icon {
-	color: $yellow;
-}
-
-.vol_icon {
-	color: $green;
-}
-
-.cpu_bar,
-.mem_bar,
-.bri_bar,
-.vol_bar {
 	scale trough {
 		all: unset;
 		background-color: $background-alt;
 		border-radius: 1rem;
-		min-height: 15px;
+		min-height: .8em;
 		min-width: 250px;
+
 		highlight {
 			all: unset;
 			border-radius: 1rem;
 		}
 	}
+
+	&--cpu {
+		scale trough highlight {
+			background-color: $blue;
+		}
+
+		#{$self}__icon {
+			color: $blue;
+		}
+	}
+
+	&--mem {
+		scale trough highlight {
+			background-color: $magenta;
+		}
+
+		#{$self}__icon {
+			color: $magenta;
+		}
+	}
+
+	&--bri {
+		scale trough highlight {
+			background-color: $yellow;
+		}
+
+		#{$self}__icon {
+			color: $yellow;
+		}
+	}
+
+	&--vol {
+		scale trough highlight {
+			background-color: $green;
+		}
+
+		#{$self}__icon {
+			color: $green;
+		}
+	}
+
+	&__icon {
+		font-family: $icons-font;
+		font-size: 1.5rem;
+		font-weight: normal;
+	}
+}
 }
 
-.cpu_bar scale trough highlight {
-	background-color: $blue;
-}
-
-.mem_bar scale trough highlight {
-	background-color: $magenta;
-}
-
-.bri_bar scale trough highlight {
-	background-color: $yellow;
-}
-
-.vol_bar scale trough highlight {
-	background-color: $green;
-}
 
 // Power menu
-.power {
+.powermenu {
 	background-color: $background;
 	color: $foreground;
 	border-radius: .8rem;
-	font-family: "tabler-icons";
-	font-size: 2.4em;
-	margin-top: 1.5em;
-}
+	font-family: $icons-font;
+	font-size: 1.6em;
+	margin-top: 8em;
 
-.button {
-	&__exit {
+	&--exit {
 		color: $red;
 	}
 
-	&__lock {
+	&--lock {
 		color: $yellow;
 	}
 
-	&__quit {
+	&--quit {
 		color: $cyan;
 	}
 
-	&__reboot {
+	&--reboot {
 		color: $blue;
 	}
 
-	&__shutdown {
+	&--shutdown {
 		color: $black-alt;
 	}
-}
-
-.exit {
-	font-size: 2.5rem;
 }
 
 //
 // Calendar
 //
-.cal-box {
-	margin-left: 1rem;
-	margin-right: 1rem;
-}
 
-calendar {
+.calendar {
+	&__box {
+		margin-left: 1rem;
+		margin-right: 1rem;
+	}
+
 	// padding: .4rem .3rem 0 .3rem;
 	font-family: Iosevka;
-	font-size: 1.3em;
+	font-size: 1.2em;
 	font-weight: 500;
 
 	&:selected {
@@ -196,63 +191,45 @@ calendar {
 	}
 }
 
+
 // Music player
-.music-player {
-	background-color: $background;
-	padding: 0 1.5rem 1rem 1.5rem;
-	border-radius: 12px;
-	margin: .5rem;
-}
+.music {
+	&__player {
+		background-color: $background;
+		// padding: 0 1.5rem 1rem 1.5rem;
+		// border-radius: 12px;
+		// margin: .5rem;
+	}
 
-.album_art {
-	background-size: cover;
-	background-position: center;
-	border-radius: 12px;
-	margin: 1rem 2rem 0.5rem 2rem;
-	padding: 5rem;
-}
+	&__album-art {
+		background-size: cover;
+		background-position: center;
+		border-radius: 12px;
+		margin: 1rem 2rem 0.5rem 2rem;
+		padding: 5rem 5em;
+	}
 
-.artist {
-	font-family: Cartograph CF;
-	font-style: italic;
-	font-weight: bold;
-	color: $foreground;
-	font-size: 1.2em;
-}
+	&__artist {
+		// font-family: Cartograph CF;
+		font-style: italic;
+		font-weight: bold;
+		color: $foreground;
+		font-size: 1.2em;
+	}
 
-.song {
-	font-family: Cartograph CF;
-	font-style: italic;
-	font-size: 1.1em;
-	color: $foreground;
-	margin-top: -5px;
-}
+	&__song {
+		font-family: Cartograph CF;
+		font-style: italic;
+		font-size: 1.1em;
+		color: $foreground;
+		margin-top: -5px;
+	}
 
-.btn_prev,
-.btn_play,
-.btn_next {
-	font-family: "tabler-icons";
-	color: $foreground;
-	font-size: 2.4em;
-}
-
-.metric-player scale trough highlight {
-	all: unset;
-	border-radius: 10px;
-	background-color: $foreground;
-}
-
-.metric-player scale trough {
-	all: unset;
-	background-color: $background;
-	border: 2px solid $foreground;
-	border-radius: 50px;
-}
-
-.metric-player scale trough {
-	min-width: 200px;
-	min-height: 10px;
-	// margin: .5rem 1rem 0 1rem;
+	&__buttons {
+		font-family: $icons-font;
+		color: $foreground;
+		font-size: 2.4em;
+	}
 }
 
 
@@ -269,6 +246,26 @@ calendar {
 // 	margin: 20px 0px 0px 0px;
 // 	border-radius: 100%;
 // }
+
+// .metric-player scale trough highlight {
+// 	all: unset;
+// 	border-radius: 10px;
+// 	background-color: $foreground;
+// }
+
+// .metric-player scale trough {
+// 	all: unset;
+// 	background-color: $background;
+// 	border: 2px solid $foreground;
+// 	border-radius: 50px;
+// }
+
+// .metric-player scale trough {
+// 	min-width: 200px;
+// 	min-height: 10px;
+// 	// margin: .5rem 1rem 0 1rem;
+// }
+
 
 // .fullname {
 // 	font-family: Cartograph CF;
@@ -387,18 +384,4 @@ calendar {
 // // 	color: $foreground;
 // // 	font-size: 20px;
 // // 	font-weight: normal;
-// // }
-
-// // /** Quote ******************************************/
-// // .quote {
-// // 	background-color: $background;
-// // 	border-radius: 12px;
-// // 	padding: 1.5rem;
-// // }
-
-// // .quote-text {
-// // 	font-family: Cartograph CF;
-// // 	font-style: italic;
-// // 	font-size: 1rem;
-// // 	color: $foreground;
 // // }

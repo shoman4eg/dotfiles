@@ -26,61 +26,61 @@
 
 ;;  system
 (defwidget system []
-	(box :class "genwin"
+	(box :class "systembar"
 		:vexpand "false"
 		:hexpand "false"
 		(box :orientation "v"
-			:spacing 25
+			:spacing 20
 			:halign "center"
 			:valign "center"
 			:space-evenly "false"
 			:vexpand "false"
 			:hexpand "false"
 
-			(box :class "cpu_bar"
+			(box :class "systembar--cpu"
 				:orientation "h"
 				:spacing 20
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "cpu_icon" :text "")
+				(label :class "systembar__icon" :text "")
 				(scale
 					:min 0
 					:max 100
 					:value {EWW_CPU.avg}
 					:active "false"))
 
-			(box :class "mem_bar"
+			(box :class "systembar--mem"
 				:orientation "h"
 				:spacing 20
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "mem_icon" :text "")
+				(label :class "systembar__icon" :text "")
 				(scale :min 0
 					:max 100
 					:value {EWW_RAM.used_mem_perc}
 					:active "false"))
 
-			(box :class "bri_bar"
+			(box :class "systembar--bri"
 				:orientation "h"
 				:spacing 20
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "bri_icon" :text "")
+				(label :class "systembar__icon" :text "")
 				(scale :min 1
 					:max 101
 					:value current-brightness
 					:onchange "xbacklight -set {}"))
 
-			(box :class "vol_bar"
+			(box :class "systembar--vol"
 				:orientation "h"
 				:spacing 20
 				:space-evenly "false"
 				:vexpand "false"
 				:hexpand "false"
-				(label :class "vol_icon" :text "")
+				(label :class "systembar__icon" :text "")
 				(scale
 					:min 1
 					:max 101
@@ -91,38 +91,39 @@
 
 ;;  Music Widgets
 (defwidget music []
-	(box :class "music-player"
+	(box :class "music__player"
 		:orientation "v"
 		:space-evenly "false"
 		:halign "center"
-	(box :class "album_art"
+	(box :class "music__album-art"
 		:style "background-image: url('${art}');")
 	(box :orientation "v"
 		:space-evenly "false"
 		:halign "center"
 		:spacing 10
-		(label :class "artist"
+		(label :class "music__artist"
 			:limit-width 15
 			:text artist)
-		(label :class "song"
+		(label :class "music__song"
 			:limit-width 20
 			:text title)
 		(box :orientation "h"
 			:space-evenly "false"
+			:class "music__buttons"
 			:halign "center"
 			:spacing 40
 			(button :class "btn_prev" :onclick "~/.config/eww/dashboard/scripts/music_info previous" "")
 			(button :class "btn_play" :onclick "~/.config/eww/dashboard/scripts/music_info toggle" playpause)
 			(button :class "btn_next" :onclick "~/.config/eww/dashboard/scripts/music_info next" "")))))
 
+;;  Calendar
 (defwidget cal []
-	(box :class "cal-box" :orientation "h"
-		(box :class "cal-inner-box"
-			(calendar :class "cal" :year calendar_year :show-details "true"))))
+	(box :class "calendar__box" :orientation "h"
+		(calendar :class "calendar" :year calendar_year :show-details "true")))
 
-;;  clock
+;;  Clock
 (defwidget clock []
-	(box :class "time"
+	(box :class "clock"
 		:orientation "v"
 		:space-evenly "false"
 		:valign "center"
@@ -130,24 +131,26 @@
 		:spacing "10"
 
 		(box :orientation "h"
-			:class "date"
+			:class "clock__date"
 			:space-evenly "false"
 			:spacing "10"
-			(label :class "hour" :text "${hour}")
-			(label :class "separator-clock" :text ":")
-			(label :class "min" :text "${minute}"))
-		(label	:class "day" :text "${date}")))
+			(label :class "clock__hour" :text "${hour}")
+			(label :class "clock__separator" :text ":")
+			(label :class "clock__min" :text "${minute}"))
+		(label	:class "clock__day" :text "${date}")))
 
 ;; Powermenu
 (defwidget powermenu []
-	(box :class "power"
+	(box :class "powermenu"
 		:orientation "h"
-		(button :class "button__shutdown" :tooltip "Shutdown" :onclick "systemctl poweroff" "")
-		(button :class "button__reboot"   :tooltip "Reboot"   :onclick "systemctl reboot" "")
-		(button :class "button__quit"     :tooltip "Logout"   :onclick "killall bspwm" "")
-		(button :class "button__lock"     :tooltip "Lock"     :onclick "betterlockscreen -l" "")
-		(button :class "button__exit"     :tooltip "Quit eww" :onclick "$HOME/.local/bin/eww -c $HOME/.config/eww/dashboard close-all" "")))
+		:valign "end"
+		(button :class "powermenu--shutdown" :tooltip "Shutdown" :onclick "systemctl poweroff" "")
+		(button :class "powermenu--reboot"   :tooltip "Reboot"   :onclick "systemctl reboot" "")
+		(button :class "powermenu--quit"     :tooltip "Logout"   :onclick "killall bspwm" "")
+		(button :class "powermenu--lock"     :tooltip "Lock"     :onclick "betterlockscreen -l" "")
+		(button :class "powermenu--exit"     :tooltip "Quit eww" :onclick "$HOME/.local/bin/eww -c $HOME/.config/eww/dashboard close-all" "")))
 
+;; Main sidebar
 (defwindow sidebar
 	:geometry (geometry :y 30 :width 350 :height 1050)
 	:monitor 0
