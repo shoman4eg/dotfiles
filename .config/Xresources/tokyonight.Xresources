@@ -1,0 +1,42 @@
+*.foreground:     #c0caf5
+*.foreground-alt: #a9b1d6
+*.background:     #1a1b26
+*.background-alt: #292e42
+*.cursorColor:    #A9B1D6
+*.highlightColor: #3b4252
+
+! Normal      Bright
+! --------    -------
+! 0 Black      8 Black
+! 1 Red        9 Red
+! 2 Yellow    10 Yellow
+! 3 Green     11 Green
+! 4 Blue      12 Blue
+! 5 Magenta   13 Magenta
+! 6 Cyan      14 Cyan
+! 7 White     15 White
+
+! Black colours
+*.color0:        #15161E
+*.color8:        #414868
+! Red colours
+*.color1:        #f7768e
+*.color9:        #f7768e
+! Green colours
+*.color2:        #9ece6a
+*.color10:       #9ece6a
+! Yellow colours
+*.color3:        #e0af68
+*.color11:       #e0af68
+! Blue colours
+*.color4:        #7aa2f7
+*.color12:       #7aa2f7
+! Magenta (pink, !green) colours
+*.color5:        #bb9af7
+*.color13:       #9d7cd8
+! Cyan (blue + green)
+*.color6:        #7dcfff
+*.color14:       #7dcfff
+! White colours
+*.color7:        #a9b1d6
+*.color15:       #c0caf5

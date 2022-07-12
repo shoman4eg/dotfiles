@@ -1,0 +1,28 @@
+! ===== Import color scheme =====
+#include ".config/Xresources/tokyonight.Xresources"
+#define font9		Symbola:style=Regular
+! ===== Cursor theme =====
+xcursor.theme:       Vanilla-DMZ
+
+! ===== Screensaver =====
+xscreensaver.fade:   false
+xscreensaver.unfade: false
+
+! ===== urxvt =====
+URxvt.scrollBar: off
+URxvt.font: xft:monospace:size=12
+URxvt.internalBorder:     22
+
+! ===== Font options =====
+Xft.dpi: 102
+!Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: false
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+URxvt*font:		xft:font9:pixelsize=12
+
+! ===== Additional resources =====
+#include ".config/Xresources/rofi.Xresources"
