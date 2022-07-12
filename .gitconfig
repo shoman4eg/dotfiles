@@ -1,0 +1,55 @@
+[core]
+    editor = code --wait
+    excludesfile = ~/.gitignore
+    pager = delta
+	autocrlf = input
+
+[interactive]
+    diffFilter = delta --color-only --features=interactive
+
+[delta]
+    navigate = true   # use n and N to move between diff sections
+    light = false    # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+    # side-by-side = true
+    features = decorations
+    line-numbers = true
+
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax
+
+[diff]
+    colorMoved = default
+
+[user]
+    email = askew.39rus@gmail.com
+    name = shoman4eg
+
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+
+[alias]
+    logg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    logf = log --name-only --pretty='\n%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=short
+    aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /'
+    who = shortlog -s --
+
+    b = branch
+    bD = b -D
+    bcD = !curbr=$(git rev-parse --abbrev-ref HEAD) && git fetch -p && git fetch origin master:master && git checkout master && git branch -D $curbr
+	c = commit
+    ca = commit --amend
+    co = checkout
+    po = push origin
+    st = status --short --branch
+
+[push]
+	default = current
