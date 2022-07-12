@@ -1,0 +1,47 @@
+#!/bin/bash
+
+FILE="$HOME/.cache/traystatus.lock"
+
+toggle() {
+    if pgrep tint2; then
+        pkill tint2
+        polybar-msg action "#tray.hook.0"
+        exit 1
+    else
+        tint2 &
+        polybar-msg action "#tray.hook.1"
+    fi
+    exit
+}
+
+kill() {
+    pkill tint2
+    polybar-msg action "#tray.hook.0"
+    exit 1
+}
+
+
+# if [[ $1 == "--toggle" ]]; then
+#         if pgrep tint2; then
+#                 pkill tint2
+#                 echo "" > $HOME/.config/polybar/scripts/tray-status
+#                 exit 1
+#         else
+#                 eww open --toggle background-closer && tint2 &
+#                 echo "" > $HOME/.config/polybar/scripts/tray-status
+#         fi
+#         exit
+# fi
+
+# if [[ $1 == "--kill" ]]; then
+#         pkill tint2
+#         echo "" > $HOME/.config/polybar/scripts/tray-status
+#         exit 1
+# fi
+
+
+case "$1" in
+	--toggle) toggle;;
+	--kill) kill;;
+    *) toggle ;;
+esac

@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+window_id="$1"
+window_class="$2"
+window_instance=$(echo ${3} | xargs)
+
+case "$window_class" in
+  [Ff]irefox* )
+    case "$(xprop -id "$window_id" WM_WINDOW_ROLE)" in
+      *PictureInPicture* )
+        echo state=floating sticky=on;;
+      *About* )
+        echo state=floating center=true;;
+      *toolbox* )
+        echo state=floating;;
+    esac;;
+esac
