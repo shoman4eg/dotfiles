@@ -1,0 +1,49 @@
+configuration {
+	font: "Inter 11";
+	show-icons: true;
+	disable-history: true;
+	fullscreen: false;
+	hide-scrollbar: true;
+	dynamic: true;
+	kb-accept-entry: "!Super-Tab,Return";
+	kb-row-down: "Super-Tab,Down";
+	kb-row-up: "Super-Shift-Tab,Up";
+	kb-cancel: "Escape";
+	window-thumbnail: true;
+}
+
+@import "theme"
+
+inputbar {
+	enabled: false;
+}
+
+listview {
+    background-color: @background;
+    columns:          4;
+    lines:            4;
+    cycle:            true;
+    dynamic:          true;
+    layout:           vertical;
+}
+
+window {
+    transparency:     "real";
+}
+
+
+entry {
+    background-color: @background;
+}
+
+mainbox {
+    background-color: @background;
+    children:         [ listview ];
+}
+element {
+    orientation:      vertical;
+}
+
+element-icon {
+    size:             80px;
+}

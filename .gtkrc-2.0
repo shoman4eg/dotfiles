@@ -3,7 +3,7 @@
 
 include "/home/askew/.gtkrc-2.0.mine"
 gtk-theme-name="Tokyonight-Dark-BL"
-gtk-icon-theme-name="Papirus-Dark"
+gtk-icon-theme-name="TokyoNight-SE"
 gtk-font-name="Cantarell 11"
 gtk-cursor-theme-name="Catppuccin-Latte-Dark-Cursors"
 gtk-cursor-theme-size=0

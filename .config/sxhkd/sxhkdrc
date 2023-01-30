@@ -116,6 +116,10 @@ super + {t,shift + t,s}
 super + f
 	bspc node -t \~fullscreen
 
+# window minimize
+super + n
+	bspc node -g hidden
+
 # set the node flags: m-marked, x-locked, y-sticky, z-private
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
